@@ -1,0 +1,308 @@
+.wrap {
+  padding-block: var(--space-6) var(--space-8);
+}
+
+.top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--muted);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.back:hover {
+  color: var(--accent);
+}
+
+.counter {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.title {
+  font-size: var(--text-3xl);
+  max-width: 24ch;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+.duration {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0.35em 0.85em;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 500;
+}
+
+.tech {
+  padding: 0.35em 0.85em;
+  border-radius: var(--radius-pill);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  transition: filter var(--dur) var(--ease-out);
+}
+
+.tech:hover {
+  color: var(--accent);
+  filter: brightness(0.94);
+}
+
+/* ── Galería de proceso ────────────────────────────────────────────────── */
+
+.sectionLabel {
+  margin-block: var(--space-7) var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--space-3);
+}
+
+.galleryItem {
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+/* ── Cuerpo ────────────────────────────────────────────────────────────── */
+
+.body {
+  margin-top: var(--space-6);
+  padding: var(--space-6);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-panel);
+  transition: border-color var(--dur) var(--ease-out);
+}
+
+.body:hover {
+  border-color: var(--accent);
+}
+
+.prose {
+  max-width: 68ch;
+  font-size: var(--text-md);
+  line-height: 1.72;
+}
+
+.prose p + p {
+  margin-top: var(--space-4);
+}
+
+/* Nota técnica del autor. Caja en acento suave, no un borde lateral. */
+.tip {
+  display: flex;
+  gap: var(--space-4);
+  margin-top: var(--space-5);
+  padding: var(--space-5);
+  border-radius: var(--radius-panel);
+  background: var(--accent-soft);
+}
+
+.tipIcon {
+  flex: none;
+  color: var(--accent);
+  margin-top: 2px;
+}
+
+.tipText {
+  font-size: var(--text-base);
+  line-height: 1.6;
+}
+
+/* ── Navegación anterior / siguiente ───────────────────────────────────── */
+
+.nav {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-3);
+  margin-top: var(--space-7);
+}
+
+.navCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-4);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-panel);
+  color: var(--text);
+  transition:
+    border-color var(--dur) var(--ease-out),
+    transform var(--dur) var(--ease-out);
+}
+
+.navCard:hover {
+  border-color: var(--primary);
+  color: var(--text);
+  transform: translateY(-2px);
+}
+
+.navNext {
+  text-align: right;
+  align-items: flex-end;
+}
+
+.navLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--muted);
+}
+
+.navTitle {
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   Muro de pago
+
+   El fondo difuminado NO es el contenido real. La RLS no nos lo ha devuelto —
+   no está en el servidor, no está en el HTML, no está en el bundle. Son barras
+   decorativas. No se puede filtrar lo que no se tiene.
+   ========================================================================== */
+
+.wallWrap {
+  position: relative;
+  margin-top: var(--space-6);
+  min-height: 430px;
+}
+
+.teaser {
+  position: absolute;
+  inset: 0;
+  padding: var(--space-6);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-panel);
+  filter: blur(9px);
+  overflow: hidden;
+  user-select: none;
+}
+
+/* El desenfoque tiene que dejar ver que HAY algo: si las barras se funden con
+   la superficie, el muro parece un error de carga en vez de contenido
+   retenido. Se tiñen hacia el texto, no hacia --surface-2. */
+.teaserLine {
+  height: 15px;
+  margin-bottom: var(--space-3);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--text) 22%, var(--surface));
+}
+
+.wall {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  gap: var(--space-4);
+  max-width: 440px;
+  margin-inline: auto;
+  margin-block: var(--space-7);
+  padding: var(--space-7) var(--space-6);
+  text-align: center;
+  background: var(--surface);
+  border: 2px solid var(--bpborder);
+  border-radius: var(--radius-feature);
+  box-shadow: var(--bp-shadow);
+}
+
+.wallIcon {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.wallTitle {
+  font-size: var(--text-xl);
+}
+
+.wallText {
+  color: var(--muted);
+  max-width: 34ch;
+}
+
+.benefits {
+  display: grid;
+  gap: var(--space-2);
+  justify-items: start;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+}
+
+.benefit {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.benefitIcon {
+  color: var(--accent);
+  margin-top: 3px;
+}
+
+.wallCta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: var(--space-4);
+  border-radius: var(--radius-card);
+  background: var(--accent);
+  color: var(--accent-contrast);
+  font-weight: 700;
+  transition: filter var(--dur) var(--ease-out);
+}
+
+.wallCta:hover {
+  color: var(--accent-contrast);
+  filter: brightness(1.07);
+}
+
+.wallNote {
+  font-size: var(--text-sm);
+  color: var(--muted);
+}

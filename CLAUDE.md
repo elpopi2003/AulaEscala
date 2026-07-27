@@ -20,8 +20,16 @@ Este fichero es el **estado vivo**: qué hay construido, qué se decidió y qué
 | Stripe: webhook, Checkout y Portal (§12.3) | **Hecho y probado de punta a punta** — pago en modo test → tramo → muro abierto. Ver [docs/stripe.md](docs/stripe.md) |
 | Auth (Supabase) | **Hecho** — login y alta automática de perfil verificados en producción |
 | Taxonomías sembradas en remoto | **Hecho** — 11 escalas, 8 temáticas, 20 técnicas |
-| Scaffolding Next.js (§12.4) | Pendiente |
-| Pantallas núcleo (§12.5) | Pendiente |
+| Scaffolding Next.js (§12.4) | **Hecho** — App Router con `/[locale]`, clientes Supabase, tokens Blueprint/Industrial, tema claro/oscuro |
+| Pantallas núcleo (§12.5) | **Las 3 que definen el producto**: feed → proyecto → paso con muro. Faltan técnica, búsqueda, precios, panel del creador y perfil |
+
+### Aviso de entorno
+
+`next/font/google` **descarga las fuentes en tiempo de build** y las sirve desde el
+propio dominio (bien para el RGPD: no se envía la IP del visitante a Google). Si la
+red interpone TLS, esa descarga falla con `UNABLE_TO_VERIFY_LEAF_SIGNATURE` y Next cae
+a fuentes del sistema — la app funciona, pero se ve con la tipografía equivocada.
+Ocurre en local, no en CI ni en despliegue. Si pasa: `node --use-system-ca`.
 
 El proyecto Supabase es `yyigaxclclxanlovxarh` (región `eu-central-1`, Postgres 17).
 **Las migraciones ya están aplicadas ahí.** El esquema del repo y el remoto coinciden.

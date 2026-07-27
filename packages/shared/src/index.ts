@@ -1,7 +1,7 @@
-export type { Database, Json } from './database.types.ts'
-export { Constants } from './database.types.ts'
+export type { Database, Json } from './database.types'
+export { Constants } from './database.types'
 
-import type { Database } from './database.types.ts'
+import type { Database } from './database.types'
 
 export type Tier = Database['public']['Enums']['subscription_tier']
 

@@ -1,0 +1,226 @@
+/* ==========================================================================
+   Tarjeta de actividad del feed.
+
+   Dos variantes de la misma pieza: `featured` (la primera, horizontal) y la
+   normal de la rejilla. Comparten estados para que el vocabulario no cambie a
+   media página.
+   ========================================================================== */
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  transition:
+    transform var(--dur) var(--ease-out),
+    box-shadow var(--dur) var(--ease-out),
+    border-color var(--dur) var(--ease-out);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--bp-shadow);
+  border-color: var(--primary);
+}
+
+/* El enlace cubre la tarjeta entera: área de pulsación grande sin anidar
+   interactivos dentro de un <a>. */
+.link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.link:focus-visible {
+  outline: none;
+}
+
+.card:has(.link:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ── Destacada ─────────────────────────────────────────────────────────── */
+
+.featured {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  border-width: 2px;
+  border-color: var(--bpborder);
+  border-radius: var(--radius-feature);
+  box-shadow: var(--bp-shadow);
+  margin-bottom: var(--space-6);
+}
+
+/* La barra superior de 4px marca la pieza destacada sin añadir cromo. */
+.featured::before {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 4px;
+  background: var(--primary);
+  z-index: 1;
+}
+
+.featured:hover {
+  transform: none;
+  border-color: var(--primary);
+}
+
+.featuredMedia {
+  height: 100%;
+}
+
+.featuredBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-6);
+  justify-content: center;
+}
+
+@media (max-width: 720px) {
+  .featured {
+    grid-template-columns: 1fr;
+  }
+
+  .featuredBody {
+    padding: var(--space-5);
+  }
+}
+
+/* ── Medios ────────────────────────────────────────────────────────────── */
+
+.media {
+  position: relative;
+}
+
+.badge {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-3);
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 0.3em 0.7em;
+  border-radius: var(--radius-card);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+}
+
+.badgeDone {
+  background: var(--primary);
+  color: var(--primary-contrast);
+}
+
+.badgeStep {
+  background: var(--accent);
+  color: var(--accent-contrast);
+}
+
+/* ── Candado Pro ───────────────────────────────────────────────────────── */
+
+/* El desenfoque ES la metáfora: se ve que hay algo, no se puede leer. No es
+   glass decorativo. */
+.lock {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: var(--space-2);
+  backdrop-filter: blur(5px);
+  background: color-mix(in srgb, var(--bg) 35%, transparent);
+  color: var(--text);
+}
+
+.lockPill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 0.35em 0.85em;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: var(--accent-contrast);
+  font-size: var(--text-xs);
+  font-weight: 700;
+}
+
+/* ── Contenido ─────────────────────────────────────────────────────────── */
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--muted);
+}
+
+.title {
+  font-size: var(--text-md);
+  line-height: 1.25;
+}
+
+/* El titular de una tarjeta no es un enlace de texto: hereda el color de la
+   tarjeta. Sin esto, la regla global `a { color: var(--primary) }` los pinta a
+   todos de azul y la rejilla se convierte en una lista de enlaces. */
+.title a {
+  color: inherit;
+}
+
+.card:hover .title a {
+  color: var(--primary);
+}
+
+.titleFeatured {
+  font-size: var(--text-2xl);
+}
+
+.parent {
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+
+.parentName {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.author {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: auto;
+  padding-top: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  font-weight: 500;
+}

@@ -1,0 +1,287 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: blur(14px);
+  border-bottom: 2px solid var(--border);
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  height: var(--header-h);
+  width: 100%;
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--page-pad);
+}
+
+/* ── Marca ─────────────────────────────────────────────────────────────── */
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-right: auto;
+  color: var(--text);
+}
+
+.brand:hover {
+  color: var(--text);
+}
+
+/* El chip "1/35": la escala más icónica del modelismo de blindados, usada como
+   logotipo. El offset naranja es la sombra dura del sistema, a 2px. */
+.chip {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex: none;
+  border-radius: var(--radius-card);
+  background: var(--primary);
+  color: var(--primary-contrast);
+  box-shadow: 2px 2px 0 0 var(--accent);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  transition: box-shadow var(--dur) var(--ease-out);
+}
+
+.brand:hover .chip {
+  box-shadow: 3px 3px 0 0 var(--accent);
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--text-lg);
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.dot {
+  color: var(--accent);
+}
+
+/* ── Navegación ────────────────────────────────────────────────────────── */
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+}
+
+.navLink {
+  position: relative;
+  padding-block: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+  transition: color var(--dur) var(--ease-out);
+}
+
+.navLink:hover {
+  color: var(--text);
+}
+
+/* El subrayado del activo se dibuja siempre y se revela con scaleX, para que la
+   transición no toque propiedades de layout. */
+.navLink::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transition: transform var(--dur) var(--ease-out);
+}
+
+.navLinkActive {
+  color: var(--text);
+}
+
+.navLinkActive::after {
+  transform: scaleX(1);
+}
+
+/* ── Acciones ──────────────────────────────────────────────────────────── */
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.iconButton {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  color: var(--muted);
+  cursor: pointer;
+  transition:
+    color var(--dur) var(--ease-out),
+    border-color var(--dur) var(--ease-out),
+    background-color var(--dur) var(--ease-out);
+}
+
+.iconButton:hover {
+  color: var(--text);
+  border-color: var(--primary);
+}
+
+.iconButton:active {
+  background: var(--surface-2);
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex: none;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  transition: border-color var(--dur) var(--ease-out);
+}
+
+.avatar:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  height: 38px;
+  padding-inline: var(--space-4);
+  border: none;
+  border-radius: var(--radius-card);
+  background: var(--accent);
+  color: var(--accent-contrast);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  white-space: nowrap;
+  transition: filter var(--dur) var(--ease-out);
+}
+
+.cta:hover {
+  color: var(--accent-contrast);
+  filter: brightness(1.06);
+}
+
+/* ── Responsive: <1000px pasa a hamburguesa + drawer ───────────────────── */
+
+.menuButton {
+  display: none;
+}
+
+@media (max-width: 999px) {
+  .nav,
+  .desktopOnly {
+    display: none;
+  }
+
+  .menuButton {
+    display: grid;
+  }
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  border: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: hsl(213 31% 8% / 0.55);
+  cursor: pointer;
+  animation: fade var(--dur) var(--ease-out);
+}
+
+.drawer {
+  position: fixed;
+  inset-block: 0;
+  right: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  width: min(86vw, 330px);
+  padding: var(--space-5);
+  background: var(--bg);
+  border-left: 2px solid var(--border);
+  overflow-y: auto;
+  animation: slideIn 0.28s var(--ease-out);
+}
+
+.drawerHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.drawerNav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.drawerLink {
+  padding: var(--space-3) var(--space-3);
+  border-radius: var(--radius-card);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  transition: background-color var(--dur) var(--ease-out);
+}
+
+.drawerLink:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.drawerLinkActive {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drawer,
+  .overlay {
+    animation: none;
+  }
+}
