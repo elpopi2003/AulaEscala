@@ -201,7 +201,7 @@
 .step {
   position: relative;
   display: grid;
-  grid-template-columns: auto 90px minmax(0, 1fr) auto;
+  grid-template-columns: 90px minmax(0, 1fr) auto;
   align-items: center;
   gap: var(--space-4);
   padding: var(--space-3) var(--space-4);
@@ -227,7 +227,7 @@
 
 @media (max-width: 620px) {
   .step {
-    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr) auto;
   }
 
   .stepThumb {
@@ -237,16 +237,18 @@
 
 /* El número no es andamiaje decorativo: la bitácora ES una secuencia y el
    orden es información que el lector necesita. */
-/* Arriba, no centrado: el numero encabeza la fila y su borde superior queda a
-   la altura del de la miniatura. `line-height: 1` es lo que hace que la
-   alineacion sea real — con el interlineado por defecto, la caja de linea
-   anade un colchon invisible encima y el numero cae un par de pixeles. */
+/* El numero encabeza el titulo, en la misma columna y justo encima.
+   Va mas pequeno que en la version en columna propia: apilado sobre el titulo
+   competiria con el si conservara los 21px, y en una lista se escanean los
+   titulos, no los numeros. */
 .stepNumber {
-  align-self: start;
+  display: block;
+  margin-bottom: 2px;
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: var(--text-lg);
+  font-size: var(--text-sm);
   line-height: 1;
+  letter-spacing: 0.06em;
   color: var(--primary);
   font-variant-numeric: tabular-nums;
 }

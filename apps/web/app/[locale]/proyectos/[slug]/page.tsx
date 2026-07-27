@@ -175,10 +175,6 @@ export default async function ProjectPage({
 
                   return (
                     <li key={step.id} className={styles.step}>
-                      <span className={styles.stepNumber} aria-hidden="true">
-                        {String(step.position).padStart(2, '0')}
-                      </span>
-
                       <div className={styles.stepThumb}>
                         <Photo
                           src={step.thumb_url}
@@ -194,6 +190,10 @@ export default async function ProjectPage({
                       </div>
 
                       <div>
+                        <span className={styles.stepNumber} aria-hidden="true">
+                          {String(step.position).padStart(2, '0')}
+                        </span>
+
                         <h3 className={styles.stepTitle}>
                           <Link
                             href={`/${locale}/proyectos/${project.slug}/pasos/${step.position}`}
