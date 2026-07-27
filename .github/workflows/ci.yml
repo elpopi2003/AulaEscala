@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ══════════════════════════════════════════════════════════════════════════
+  # §13: el test de no-fuga BLOQUEA EL MERGE.
+  # Una politica RLS mal escrita ES una fuga de contenido de pago, asi que se
+  # verifica antes que ninguna otra cosa y con job propio para que el fallo se
+  # lea de un vistazo.
+  # ══════════════════════════════════════════════════════════════════════════
+  rls:
+    name: RLS y test de no-fuga
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Levantar Supabase local
+        run: supabase start --exclude realtime,storage-api,imgproxy,studio,edge-runtime,logflare,vector
+
+      - name: Aplicar migraciones y seed
+        run: supabase db reset --no-seed=false
+
+      - name: Test de no-fuga y matriz de tramos
+        run: supabase test db
+
+      - name: Verificar que los tipos generados estan al dia
+        run: |
+          supabase gen types typescript --local --schema public > /tmp/database.types.ts
+          if ! diff -q /tmp/database.types.ts packages/shared/src/database.types.ts >/dev/null 2>&1; then
+            echo "::error::Los tipos generados no coinciden con el esquema. Ejecuta: pnpm db:types"
+            diff /tmp/database.types.ts packages/shared/src/database.types.ts || true
+            exit 1
+          fi
+
+  # El job `web` (lint + typecheck + build de Next.js) se activa junto con el
+  # scaffolding de /apps/web. Hoy no existe la app, y un job que falla siempre
+  # entrena a ignorar el rojo de CI.

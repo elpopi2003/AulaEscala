@@ -1,0 +1,44 @@
+# deps
+node_modules/
+.pnpm-store/
+
+# next
+.next/
+out/
+next-env.d.ts
+
+# build
+dist/
+build/
+*.tsbuildinfo
+
+# env — nunca se versionan claves
+.env
+.env.*
+!.env.example
+
+# supabase local
+supabase/.branches/
+supabase/.temp/
+supabase/.env
+
+# Los tipos generados (packages/shared/src/database.types.ts) SI se versionan:
+# el build y el typecheck de CI no levantan una base de datos, y CI comprueba
+# que coinciden con el esquema (`pnpm db:types`).
+
+# os / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# tests
+coverage/
+playwright-report/
+test-results/

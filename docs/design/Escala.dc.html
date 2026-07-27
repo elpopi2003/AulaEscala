@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics="">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&amp;family=Montserrat:wght@400;500;600;700&amp;family=Raleway:wght@800&amp;display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  button{font-family:inherit}
+  a{color:var(--primary);text-decoration:none}
+  a:hover{color:var(--accent);text-decoration:none}
+  ::selection{background:var(--accent-soft)}
+  input,textarea,select{font-family:inherit}
+  input::placeholder,textarea::placeholder{color:var(--faint)}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  @keyframes slideIn{from{transform:translateX(100%)}to{transform:none}}
+</style>
+</helmet>
+<div style="{{ rootStyle }}">
+
+  <!-- ============ HEADER ============ -->
+  <header style="position:sticky;top:0;z-index:50;background:color-mix(in srgb, var(--bg) 88%, transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:2px solid var(--border)">
+    <div style="max-width:1200px;margin:0 auto;padding:0 clamp(16px,4vw,40px);height:64px;display:flex;align-items:center;gap:clamp(10px,2.5vw,28px)">
+      <button onClick="{{ goFeed }}" style="display:flex;align-items:center;gap:10px;background:none;border:none;cursor:pointer;padding:0">
+        <span style="width:36px;height:36px;border-radius:6px;background:var(--primary);color:var(--primary-contrast);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:10px;font-weight:600;box-shadow:2px 2px 0 0 var(--accent)">1/35</span>
+        <span style="font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--text);letter-spacing:.02em;text-transform:uppercase">Escala<span style="color:var(--accent)">.</span></span>
+      </button>
+      <sc-if value="{{ isWide }}" hint-placeholder-val="{{ true }}">
+      <nav style="display:flex;gap:2px">
+        <sc-for list="{{ navItems }}" as="item" hint-placeholder-count="4">
+          <button onClick="{{ item.onClick }}" style="position:relative;background:none;border:none;cursor:pointer;padding:8px 11px;font-family:var(--font-mono);font-size:12px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);white-space:nowrap" style-hover="color:var(--primary)">
+            {{ item.label }}
+            <sc-if value="{{ item.active }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:11px;right:11px;bottom:1px;height:2px;background:var(--accent);border-radius:2px"></span></sc-if>
+          </button>
+        </sc-for>
+      </nav>
+      <div style="flex:1;min-width:8px"></div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <span style="font-family:var(--font-mono);font-size:9.5px;color:var(--faint);text-transform:uppercase;letter-spacing:.08em;white-space:nowrap">Ver como</span>
+        <div style="display:flex;background:var(--surface-2);border-radius:9px;padding:3px">
+          <sc-for list="{{ tierTabs }}" as="tt" hint-placeholder-count="3">
+            <button onClick="{{ tt.onClick }}" style="{{ tt.style }}">{{ tt.label }}</button>
+          </sc-for>
+        </div>
+      </div>
+      <button onClick="{{ toggleTheme }}" title="Cambiar tema" style="width:38px;height:38px;flex:none;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center" style-hover="background:var(--surface-2)">
+        <sc-if value="{{ themeIsDark }}" hint-placeholder-val="{{ false }}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg></sc-if>
+        <sc-if value="{{ themeIsLight }}" hint-placeholder-val="{{ true }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"></path></svg></sc-if>
+      </button>
+      <button onClick="{{ goProfileMe }}" title="Mi perfil" style="width:38px;height:38px;flex:none;border-radius:50%;border:1px solid var(--border);background:var(--accent-soft);color:var(--accent);cursor:pointer;font-family:var(--font-mono);font-size:12px;font-weight:500">MV</button>
+      </sc-if>
+      <sc-if value="{{ isNarrow }}" hint-placeholder-val="{{ false }}">
+      <div style="flex:1"></div>
+      <button onClick="{{ toggleTheme }}" title="Cambiar tema" style="width:40px;height:40px;flex:none;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center">
+        <sc-if value="{{ themeIsDark }}" hint-placeholder-val="{{ false }}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg></sc-if>
+        <sc-if value="{{ themeIsLight }}" hint-placeholder-val="{{ true }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"></path></svg></sc-if>
+      </button>
+      <button onClick="{{ toggleMenu }}" title="Menú" style="width:40px;height:40px;flex:none;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>
+      </button>
+      </sc-if>
+    </div>
+  </header>
+
+  <!-- ============ MOBILE DRAWER ============ -->
+  <sc-if value="{{ drawerOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closeMenu }}" style="position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.42);animation:fadeUp .2s ease">
+    <aside onClick="{{ stopMenu }}" style="position:absolute;top:0;right:0;bottom:0;width:min(86vw,330px);background:var(--surface);border-left:1px solid var(--border);padding:18px 18px 30px;display:flex;flex-direction:column;gap:20px;box-shadow:-16px 0 44px var(--shadow);animation:slideIn .28s ease;overflow-y:auto">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <span style="font-family:var(--font-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)">Menú</span>
+        <button onClick="{{ closeMenu }}" style="width:36px;height:36px;border-radius:9px;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+      </div>
+      <nav style="display:flex;flex-direction:column;gap:3px">
+        <sc-for list="{{ mobileNavItems }}" as="item" hint-placeholder-count="4">
+          <button onClick="{{ item.onClick }}" style="{{ item.style }}">{{ item.label }}</button>
+        </sc-for>
+      </nav>
+      <div style="height:1px;background:var(--border)"></div>
+      <div>
+        <span style="font-family:var(--font-mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)">Ver como</span>
+        <div style="display:flex;flex-direction:column;gap:7px;margin-top:11px">
+          <sc-for list="{{ tierTabsMobile }}" as="tt" hint-placeholder-count="3">
+            <button onClick="{{ tt.onClick }}" style="{{ tt.style }}">{{ tt.label }}</button>
+          </sc-for>
+        </div>
+      </div>
+      <div style="height:1px;background:var(--border)"></div>
+      <button onClick="{{ mobileProfile }}" style="display:flex;align-items:center;gap:12px;background:none;border:none;cursor:pointer;padding:6px 2px;text-align:left">
+        <span style="width:40px;height:40px;flex:none;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:13px">MV</span>
+        <span><span style="display:block;font-size:15px;font-weight:600;color:var(--text)">Marta Vidal</span><span style="font-size:12.5px;color:var(--muted)">Ver mi perfil</span></span>
+      </button>
+    </aside>
+  </div>
+  </sc-if>
+
+  <!-- ============ FEED ============ -->
+  <sc-if value="{{ isFeed }}" hint-placeholder-val="{{ true }}">
+  <main style="max-width:1200px;margin:0 auto;padding:clamp(22px,4vw,44px) clamp(16px,4vw,40px) 80px;animation:fadeUp .4s ease">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:22px">
+      <div>
+        <p style="margin:0 0 4px;font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)">El banco de trabajo</p>
+        <h1 style="margin:0;font-family:var(--font-display);font-weight:600;font-size:clamp(30px,5vw,44px);line-height:1.02;letter-spacing:-.02em;color:var(--text)">Progreso reciente</h1>
+      </div>
+      <div style="display:flex;background:var(--surface-2);border-radius:11px;padding:4px">
+        <sc-for list="{{ filterTabs }}" as="ft" hint-placeholder-count="3">
+          <button onClick="{{ ft.onClick }}" style="{{ ft.style }}">{{ ft.label }}</button>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:clamp(20px,3vw,34px);align-items:flex-start;flex-wrap:wrap">
+      <div style="flex:1 1 620px;min-width:min(100%,300px)">
+        <!-- FEATURED -->
+        <sc-if value="{{ hasFeatured }}" hint-placeholder-val="{{ true }}">
+        <article style="position:relative;background:var(--surface);border:2px solid var(--bpborder);border-radius:8px;overflow:hidden;box-shadow:var(--bp-shadow);margin-bottom:26px">
+          <span style="position:absolute;top:0;left:0;right:0;height:4px;background:var(--primary);z-index:2"></span>
+          <div style="display:flex;flex-wrap:wrap">
+            <button onClick="{{ featured.onOpen }}" style="position:relative;flex:1 1 340px;min-height:230px;border:none;padding:0;cursor:pointer;background:repeating-linear-gradient(135deg,var(--pa),var(--pa) 11px,var(--pb) 11px,var(--pb) 22px);display:flex;align-items:center;justify-content:center">
+              <span style="font-family:var(--font-mono);font-size:11px;color:var(--faint);background:var(--surface);padding:4px 9px;border-radius:5px">{{ featured.thumb }}</span>
+              <sc-if value="{{ featured.locked }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;inset:0;background:color-mix(in srgb,var(--bg) 30%,transparent);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px">
+                  <span style="width:44px;height:44px;border-radius:50%;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--accent)"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10.5" width="16" height="9.5" rx="2"></rect><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"></path></svg></span>
+                  <span style="font-family:var(--font-mono);font-size:11px;color:var(--text);background:var(--surface);padding:6px 12px;border-radius:999px;border:1px solid var(--border)">Hazte Pro para ver el paso</span>
+                </div>
+              </sc-if>
+            </button>
+            <div style="flex:1 1 300px;padding:clamp(20px,3vw,30px);display:flex;flex-direction:column;justify-content:center;gap:12px">
+              <div style="display:flex;align-items:center;gap:10px;font-family:var(--font-mono);font-size:11px;color:var(--muted)">
+                <span style="background:var(--accent);color:var(--accent-contrast);padding:3px 8px;border-radius:6px;font-weight:500">{{ featured.badge }}</span>
+                <span>{{ featured.time }}</span>
+              </div>
+              <button onClick="{{ featured.onOpen }}" style="text-align:left;background:none;border:none;padding:0;cursor:pointer">
+                <h2 style="margin:0;font-family:var(--font-display);font-weight:600;font-size:clamp(22px,3vw,30px);line-height:1.08;letter-spacing:-.01em;color:var(--text)">{{ featured.stepLabel }}</h2>
+              </button>
+              <button onClick="{{ featured.onProject }}" style="text-align:left;background:none;border:none;padding:0;cursor:pointer;font-size:14px;color:var(--muted)" style-hover="color:var(--accent)">en <span style="color:var(--text);font-weight:600">{{ featured.project }}</span></button>
+              <div style="display:flex;align-items:center;gap:9px;margin-top:2px">
+                <span style="width:26px;height:26px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:10px">{{ featured.initials }}</span>
+                <span style="font-size:13px;color:var(--muted)">{{ featured.author }}</span>
+              </div>
+              <div style="margin-top:4px"><span style="background:var(--accent-soft);color:var(--accent);padding:5px 12px;border-radius:999px;font-size:12.5px;font-weight:600">{{ featured.tech }}</span></div>
+            </div>
+          </div>
+        </article>
+        </sc-if>
+
+        <!-- GRID -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px">
+          <sc-for list="{{ feedRest }}" as="c" hint-placeholder-count="5">
+            <article style="position:relative;background:var(--surface);border:2px solid var(--border);border-radius:6px;overflow:hidden;box-shadow:0 1px 2px var(--shadow);display:flex;flex-direction:column;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease" style-hover="transform:translateY(-4px);box-shadow:var(--bp-shadow);border-color:var(--primary)">
+              <button onClick="{{ c.onFav }}" title="Guardar en favoritos" style="{{ c.favBtnStyle }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="{{ c.favFill }}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.5 4.7a4.2 4.2 0 0 0-6 0 4.3 4.3 0 0 0 0 6L12 17.2l6.5-6.5a4.3 4.3 0 0 0 0-6 4.2 4.2 0 0 0-6 0l-.5.5z"></path></svg></button>
+              <button onClick="{{ c.onOpen }}" style="position:relative;border:none;padding:0;cursor:pointer;aspect-ratio:16/11;background:repeating-linear-gradient(135deg,var(--pa),var(--pa) 10px,var(--pb) 10px,var(--pb) 20px);display:flex;align-items:center;justify-content:center">
+                <span style="font-family:var(--font-mono);font-size:10.5px;color:var(--faint);background:var(--surface);padding:3px 8px;border-radius:5px">{{ c.thumb }}</span>
+                <sc-if value="{{ c.isDone }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:10px;left:10px;display:flex;align-items:center;gap:5px;background:var(--accent);color:var(--accent-contrast);padding:4px 9px;border-radius:999px;font-family:var(--font-mono);font-size:10px"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-11"></path></svg>Terminado</span></sc-if>
+                <sc-if value="{{ c.locked }}" hint-placeholder-val="{{ false }}">
+                  <div style="position:absolute;inset:0;background:color-mix(in srgb,var(--bg) 28%,transparent);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px">
+                    <span style="color:var(--accent)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10.5" width="16" height="9.5" rx="2"></rect><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"></path></svg></span>
+                    <span style="font-family:var(--font-mono);font-size:10px;color:var(--text);background:var(--surface);padding:5px 10px;border-radius:999px;border:1px solid var(--border);text-align:center">Hazte Pro</span>
+                  </div>
+                </sc-if>
+              </button>
+              <div style="padding:14px 15px 16px;display:flex;flex-direction:column;gap:8px;flex:1">
+                <div style="display:flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:10px;color:var(--muted)">
+                  <sc-if value="{{ c.isStep }}" hint-placeholder-val="{{ true }}"><span style="color:var(--accent);font-weight:500">{{ c.badge }}</span></sc-if>
+                  <span>· {{ c.time }}</span>
+                </div>
+                <button onClick="{{ c.onOpen }}" style="text-align:left;background:none;border:none;padding:0;cursor:pointer">
+                  <h3 style="margin:0;font-family:var(--font-display);font-weight:600;font-size:18px;line-height:1.14;color:var(--text)">{{ c.title }}</h3>
+                </button>
+                <button onClick="{{ c.onProject }}" style="text-align:left;background:none;border:none;padding:0;cursor:pointer;font-size:12.5px;color:var(--muted)" style-hover="color:var(--accent)">{{ c.projectLine }}</button>
+                <div style="flex:1"></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding-top:4px">
+                  <div style="display:flex;align-items:center;gap:7px">
+                    <span style="width:22px;height:22px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:9px">{{ c.initials }}</span>
+                    <span style="font-size:12px;color:var(--muted)">{{ c.author }}</span>
+                  </div>
+                  <span style="background:var(--accent-soft);color:var(--accent);padding:3px 9px;border-radius:999px;font-size:11px;font-weight:600;white-space:nowrap;max-width:110px;overflow:hidden;text-overflow:ellipsis">{{ c.tech }}</span>
+                </div>
+              </div>
+            </article>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- SIDEBAR -->
+      <aside style="flex:1 1 268px;min-width:min(100%,240px);display:flex;flex-direction:column;gap:18px;position:sticky;top:84px">
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 18px 20px">
+          <h4 style="margin:0 0 13px;font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)">Técnicas en tendencia</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            <sc-for list="{{ trendingTechs }}" as="tk" hint-placeholder-count="6">
+              <button onClick="{{ tk.onClick }}" style="background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:6px 12px;border-radius:999px;font-size:12.5px;cursor:pointer" style-hover="border-color:var(--accent);color:var(--accent)">{{ tk.name }}</button>
+            </sc-for>
+          </div>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px">
+          <h4 style="margin:0 0 13px;font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)">Modelistas a seguir</h4>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <sc-for list="{{ suggestedModelers }}" as="m" hint-placeholder-count="3">
+              <div style="display:flex;align-items:center;gap:11px">
+                <span style="width:36px;height:36px;flex:none;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:11px">{{ m.initials }}</span>
+                <div style="flex:1;min-width:0">
+                  <div style="font-size:13.5px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.name }}</div>
+                  <div style="font-size:11.5px;color:var(--faint)">{{ m.meta }}</div>
+                </div>
+                <button style="background:none;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:600;cursor:pointer" style-hover="border-color:var(--accent);color:var(--accent)">Seguir</button>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="background:var(--accent-soft);border:1px solid transparent;border-radius:14px;padding:18px">
+          <h4 style="margin:0 0 6px;font-family:var(--font-display);font-size:18px;font-weight:600;color:var(--accent)">Documenta tu build</h4>
+          <p style="margin:0 0 14px;font-size:13px;line-height:1.5;color:var(--text)">Publica tu bitácora paso a paso y comparte tus técnicas con la comunidad.</p>
+          <button onClick="{{ goPricing }}" style="background:var(--accent);color:var(--accent-contrast);border:none;border-radius:9px;padding:10px 15px;font-size:13px;font-weight:600;cursor:pointer">Hazte Modelista →</button>
+        </div>
+      </aside>
+    </div>
+  </main>
+  </sc-if>
+
+  <!-- ============ PROJECT (BITÁCORA) ============ -->
+  <sc-if value="{{ isProject }}" hint-placeholder-val="{{ false }}">
+  <main data-screen-label="Proyecto" style="animation:fadeUp .4s ease">
+    <!-- cover -->
+    <div style="position:relative;height:clamp(240px,38vw,400px);background:repeating-linear-gradient(135deg,var(--pa),var(--pa) 13px,var(--pb) 13px,var(--pb) 26px);display:flex;align-items:flex-end">
+      <div style="position:absolute;inset:0;background:linear-gradient(to top, color-mix(in srgb,var(--bg) 88%,transparent), transparent 55%)"></div>
+      <span style="position:absolute;top:16px;left:50%;transform:translateX(-50%);font-family:var(--font-mono);font-size:11px;color:var(--faint);background:var(--surface);padding:4px 10px;border-radius:6px">{{ project.cover }}</span>
+      <div style="position:relative;max-width:1200px;margin:0 auto;width:100%;padding:0 clamp(16px,4vw,40px) clamp(20px,3vw,32px)">
+        <button onClick="{{ goFeed }}" style="background:var(--surface);border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:6px 12px;font-size:12.5px;cursor:pointer;margin-bottom:16px" style-hover="color:var(--text)">← Feed</button>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span style="display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);padding:5px 11px;border-radius:999px;font-family:var(--font-mono);font-size:11px;color:var(--text)">
+            <span style="width:7px;height:7px;border-radius:50%;background:{{ project.statusColor }}"></span>{{ project.status }}
+          </span>
+          <span style="font-family:var(--font-mono);font-size:11px;color:var(--muted)">{{ project.theme }}</span>
+        </div>
+        <h1 style="margin:0;font-family:var(--font-display);font-weight:700;font-size:clamp(30px,6vw,56px);line-height:1;letter-spacing:-.02em;color:var(--text)">{{ project.title }}</h1>
+        <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:8px">
+          <p style="margin:0;font-family:var(--font-mono);font-size:clamp(13px,2vw,16px);letter-spacing:.02em;color:var(--muted)">{{ project.subtitle }}</p>
+          <button onClick="{{ project.onFav }}" style="{{ project.favBtnStyle }}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="{{ project.favFill }}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.5 4.7a4.2 4.2 0 0 0-6 0 4.3 4.3 0 0 0 0 6L12 17.2l6.5-6.5a4.3 4.3 0 0 0 0-6 4.2 4.2 0 0 0-6 0l-.5.5z"></path></svg>
+            {{ project.favLabel }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div style="max-width:1200px;margin:0 auto;padding:clamp(20px,3vw,30px) clamp(16px,4vw,40px) 80px">
+      <!-- attribute bar -->
+      <div style="display:flex;flex-wrap:wrap;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:28px">
+        <sc-for list="{{ project.attrs }}" as="a" hint-placeholder-count="5">
+          <div style="flex:1 1 150px;background:var(--surface);padding:13px 16px">
+            <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin-bottom:4px">{{ a.label }}</div>
+            <div style="font-size:14.5px;font-weight:600;color:var(--text)">{{ a.value }}</div>
+          </div>
+        </sc-for>
+      </div>
+
+      <!-- FINISHED BUILD GALLERY -->
+      <sc-if value="{{ project.hasFinished }}" hint-placeholder-val="{{ true }}">
+      <div style="margin-bottom:30px">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px">
+          <h2 style="margin:0;font-family:var(--font-display);font-weight:600;font-size:22px;color:var(--text)">Galería del build</h2>
+          <span style="font-family:var(--font-mono);font-size:11px;color:var(--faint)">Fotos del resultado final</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px">
+          <sc-for list="{{ project.finishedGallery }}" as="g" hint-placeholder-count="6">
+            <div style="position:relative;aspect-ratio:4/3;border-radius:12px;overflow:hidden;background:repeating-linear-gradient(135deg,var(--pa),var(--pa) 10px,var(--pb) 10px,var(--pb) 20px);display:flex;align-items:flex-end;padding:9px;cursor:pointer" style-hover="opacity:.92">
+              <span style="font-family:var(--font-mono);font-size:10px;color:var(--faint);background:var(--surface);padding:2px 7px;border-radius:4px">{{ g }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
+
+      <div style="display:flex;gap:clamp(22px,3vw,40px);align-items:flex-start;flex-wrap:wrap">
+        <!-- steps -->
+        <div style="flex:1 1 560px;min-width:min(100%,300px)">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:16px">
+            <h2 style="margin:0;font-family:var(--font-display);font-weight:600;font-size:26px;color:var(--text)">Bitácora de montaje</h2>
+            <div style="display:flex;align-items:center;gap:12px">
+              <span style="font-family:var(--font-mono);font-size:12px;color:var(--muted)">{{ project.stepsCount }} pasos</span>
+              <sc-if value="{{ project.canEdit }}" hint-placeholder-val="{{ false }}"><button onClick="{{ project.onNewStep }}" style="display:flex;align-items:center;gap:5px;background:var(--accent-soft);color:var(--accent);border:none;border-radius:8px;padding:7px 12px;font-size:12.5px;font-weight:600;cursor:pointer"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>Nuevo paso</button></sc-if>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <sc-for list="{{ projectSteps }}" as="s" hint-placeholder-count="6">
+              <div style="display:flex;gap:16px;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:12px;transition:border-color .16s ease" style-hover="border-color:var(--accent)">
+                <span style="width:34px;flex:none;text-align:center;font-family:var(--font-display);font-size:24px;font-weight:600;color:var(--faint)">{{ s.n }}</span>
+                <button onClick="{{ s.onOpen }}" style="position:relative;width:90px;height:66px;flex:none;border:none;padding:0;cursor:pointer;border-radius:9px;overflow:hidden;background:repeating-linear-gradient(135deg,var(--pa),var(--pa) 8px,var(--pb) 8px,var(--pb) 16px);display:flex;align-items:center;justify-content:center">
+                  <sc-if value="{{ s.locked }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;inset:0;background:color-mix(in srgb,var(--bg) 40%,transparent);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;color:var(--accent)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10.5" width="16" height="9.5" rx="2"></rect><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"></path></svg></span></sc-if>
+                </button>
+                <button onClick="{{ s.onOpen }}" style="flex:1;min-width:0;text-align:left;background:none;border:none;cursor:pointer;padding:0">
+                  <span style="display:block;font-size:16px;font-weight:600;color:var(--text);margin-bottom:6px">{{ s.title }}</span>
+                  <span style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">
+                    <span style="display:inline-flex;align-items:center;gap:4px;font-family:var(--font-mono);font-size:10.5px;color:var(--muted)"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>{{ s.duration }}</span>
+                    <sc-for list="{{ s.techniques }}" as="t" hint-placeholder-count="2">
+                      <span style="font-family:var(--font-mono);font-size:10.5px;color:var(--accent);background:var(--accent-soft);padding:2px 8px;border-radius:999px">{{ t }}</span>
+                    </sc-for>
+                  </span>
+                </button>
+                <sc-if value="{{ s.canEdit }}" hint-placeholder-val="{{ false }}"><button onClick="{{ s.onEdit }}" title="Editar paso" style="width:34px;height:34px;flex:none;border-radius:9px;border:1px solid var(--border);background:none;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center" style-hover="border-color:var(--accent);color:var(--accent)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"></path></svg></button></sc-if>
+                <button onClick="{{ s.onOpen }}" style="background:none;border:none;cursor:pointer;color:var(--faint);flex:none;padding:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6l6 6-6 6"></path></svg></button>
+              </div>
+            </sc-for>
+          </div>
+
+          <!-- comments -->
+          <h2 style="margin:36px 0 16px;font-family:var(--font-display);font-weight:600;font-size:24px;color:var(--text)">Comentarios <span style="font-family:var(--font-mono);font-size:14px;color:var(--faint);font-weight:400">{{ project.commentCount }}</span></h2>
+          <div style="display:flex;gap:11px;margin-bottom:20px">
+            <span style="width:34px;height:34px;flex:none;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:11px">MV</span>
+            <div style="flex:1;display:flex;gap:8px;flex-wrap:wrap">
+              <input placeholder="Añade un comentario…" style="flex:1;min-width:180px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 14px;font-size:14px;color:var(--text)">
+              <button style="background:var(--accent);color:var(--accent-contrast);border:none;border-radius:10px;padding:0 18px;font-weight:600;font-size:14px;cursor:pointer">Publicar</button>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:22px">
+            <sc-for list="{{ project.comments }}" as="cm" hint-placeholder-count="2">
+              <div style="display:flex;gap:11px;background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:15px 18px;transition:border-color .18s ease" style-hover="border-color:var(--accent)">
+                <span style="width:34px;height:34px;flex:none;border-radius:50%;background:var(--surface-2);color:var(--muted);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:11px">{{ cm.initials }}</span>
+                <div style="flex:1;min-width:0">
+                  <div style="display:flex;align-items:baseline;gap:9px;margin-bottom:3px"><span style="font-size:14px;font-weight:600;color:var(--text)">{{ cm.author }}</span><span style="font-family:var(--font-mono);font-size:11px;color:var(--faint)">{{ cm.time }}</span></div>
+                  <p style="margin:0 0 8px;font-size:14px;line-height:1.55;color:var(--muted)">{{ cm.text }}</p>
+                  <div style="display:flex;align-items:center;gap:16px">
+                    <button onClick="{{ cm.onLike }}" style="display:flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;padding:0;color:{{ cm.likeColor }};font-size:12.5px;font-weight:600">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="{{ cm.likeFill }}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1L12 21l7.7-7.6 1.1-1a5.5 5.5 0 0 0 0-7.8z"></path></svg>
+                      {{ cm.likeCount }}
+                    </button>
+                    <button onClick="{{ cm.onToggleReply }}" style="display:flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;padding:0;color:var(--muted);font-size:12.5px;font-weight:600" style-hover="color:var(--accent)">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17l-5-5 5-5M4 12h11a5 5 0 0 1 5 5v1"></path></svg>
+                      Responder
+                    </button>
+                  </div>
+                  <sc-if value="{{ cm.hasReplies }}" hint-placeholder-val="{{ false }}">
+                    <div style="display:flex;flex-direction:column;gap:14px;margin-top:14px;padding-left:14px;border-left:2px solid var(--border)">
+                      <sc-for list="{{ cm.replies }}" as="rp" hint-placeholder-count="1">
+                        <div style="display:flex;gap:9px">
+                          <span style="width:28px;height:28px;flex:none;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:10px">{{ rp.initials }}</span>
+                          <div><div style="display:flex;align-items:baseline;gap:8px;margin-bottom:2px"><span style="font-size:13px;font-weight:600;color:var(--text)">{{ rp.author }}</span><span style="font-family:var(--font-mono);font-size:10.5px;color:var(--faint)">{{ rp.time }}</span></div><p style="margin:0;font-size:13.5px;line-height:1.5;color:var(--muted)">{{ rp.text }}</p></div>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{ cm.replyOpen }}" hint-placeholder-val="{{ false }}">
+                    <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+                      <input value="{{ cm.draft }}" onInput="{{ cm.onDraft }}" placeholder="Escribe una respuesta…" style="flex:1;min-width:180px;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:9px 12px;font-size:13.5px;color:var(--text)">
+                      <button onClick="{{ cm.onSendReply }}" style="background:var(--accent);color:var(--accent-contrast);border:none;border-radius:9px;padding:0 16px;font-weight:600;font-size:13px;cursor:pointer">Responder</button>
+                    </div>
+                  </sc-if>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <!-- sidebar: author + materials as ACCORDION (Elementor Accordion widget) -->
+        <aside style="flex:1 1 280px;min-width:min(100%,240px);display:flex;flex-direction:column;gap:14px;position:sticky;top:84px">
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden">
+            <!-- accordion item: autor -->
+            <button onClick="{{ toggleAutor }}" style="width:100%;display:flex;align-items:center;gap:10px;background:none;border:none;cursor:pointer;padding:15px 17px;text-align:left">
+              <span style="font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--text);flex:1">Sobre el autor</span>
+              <span style="color:var(--muted);flex:none;transform:{{ accAutorChevron }};transition:transform .2s ease"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6"></path></svg></span>
+            </button>
+            <sc-if value="{{ accAutor }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:0 17px 17px;display:flex;align-items:center;gap:13px;border-top:1px solid var(--border);padding-top:15px">
+                <button onClick="{{ project.onAuthor }}" style="width:48px;height:48px;flex:none;border-radius:50%;background:var(--accent-soft);color:var(--accent);border:none;cursor:pointer;font-family:var(--font-mono);font-size:14px">{{ project.authorInitials }}</button>
+                <div style="flex:1;min-width:0">
+                  <div style="font-size:15px;font-weight:600;color:var(--text)">{{ project.author }}</div>
+                  <div style="font-size:12px;color:var(--faint)">Autor de la bitácora</div>
+                </div>
+                <button style="background:none;border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 13px;font-size:12.5px;font-weight:600;cursor:pointer" style-hover="border-color:var(--accent);color:var(--accent)">Seguir</button>
+              </div>
+            </sc-if>
+            <!-- accordion item: materiales -->
+            <div style="border-top:1px solid var(--border)">
+              <button onClick="{{ toggleMateriales }}" style="width:100%;display:flex;align-items:center;gap:10px;background:none;border:none;cursor:pointer;padding:15px 17px;text-align:left">
+                <span style="font-family:var(--font-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--text);flex:1">Materiales descargables</span>
+                <sc-if value="{{ materialsLocked }}" hint-placeholder-val="{{ true }}"><span style="display:flex;align-items:center;gap:4px;font-family:var(--font-mono);font-size:10px;color:var(--accent);background:var(--accent-soft);padding:3px 8px;border-radius:999px;flex:none"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="4" y="10.5" width="16" height="9.5" rx="2"></rect><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"></path></svg>Pro</span></sc-if>
+                <span style="color:var(--muted);flex:none;transform:{{ accMaterialesChevron }};transition:transform .2s ease"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6"></path></svg></span>
+              </button>
+              <sc-if value="{{ accMateriales }}" hint-placeholder-val="{{ true }}">
+              <div style="padding:0 17px 17px">
+                <div style="position:relative">
+                  <div style="display:flex;flex-direction:column;gap:9px">
+                    <sc-for list="{{ project.materials }}" as="mat" hint-placeholder-count="3">
+                      <div style="display:flex;align-items:center;gap:10px;padding:9px 11px;background:var(--surface-2);border-radius:9px">
+                        <span style="color:var(--accent);flex:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v5h5M8 3h6l5 5v11a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"></path></svg></span>
+                        <span style="flex:1;min-width:0;font-size:13px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ mat.name }}</span>
+                        <span style="font-family:var(--font-mono);font-size:10.5px;color:var(--faint)">{{ mat.size }}</span>
+                      </div>
+                    </sc-for>
+                  </div>
+                  <sc-if value="{{ materialsLocked }}" hint-placeholder-val="{{ true }}">
+                    <div style="position:absolute;inset:-4px;background:color-mix(in srgb,var(--surface) 55%,transparent);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);border-radius:11px;display:flex;align-items:center;justify-content:center">
+                      <button onClick="{{ goPricing }}" style="background:var(--accent);color:var(--accent-contrast);border:none;border-radius:9px;padding:9px 15px;font-size:13px;font-weight:600;cursor:pointer">Desbloquear con Pro</button>
+                    </div>
+                  </sc-if>
+                </div>
+              </div>
+              </sc-if>
+            </div>
+          </div>
+
+          <button onClick="{{ onExportPdf }}" style="display:flex;align-items:center;justify-content:center;gap:9px;background:{{ pdfBtnBg }};color:{{ pdfBtnColor }};border:1px solid var(--border);border-radius:12px;padding:14px;font-size:14px;font-weight:600;cursor:pointer">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11m-4-4 4 4 4-4M5 20h14"></path></svg>
+            Exportar bitácora a PDF
+            <sc-if value="{{ materialsLocked }}" hint-placeholder-val="{{ true }}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="4" y="10.5" width="16" height="9.5" rx="2"></rect><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"></path></svg></sc-if>
+          </button>
+        </aside>
+      </div>
+    </div>
+  </main>
+  </sc-if>
+
+  <!-- ============ STEP + TEASER ============ -->
+  <sc-if value="{{ isStep }}" hint-placeholder-val="{{ false }}">
+  <main data-screen-label="Paso" style="max-width:1200px;margin:0 auto;padding:clamp(20px,3vw,34px) clamp(16px,4vw,40px) 80px;animation:fadeUp .4s ease">
+    <button onClick="{{ step.onProject }}" style="background:none;border:none;color:var(--muted);font-size:13px;cursor:pointer;padding:0;margin-bottom:18px" style-hover="color:var(--accent)">← {{ project.title }}</button>
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px">
+      <div style="font-family:var(--font-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:8px">Paso {{ step.n }} de {{ project.stepsCount }}</div>
+      <sc-if value="{{ step.canEdit }}" hint-placeholder-val="{{ false }}"><button onClick="{{ step.onEdit }}" style="display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:9px;padding:8px 13px;font-size:13px;font-weight:600;cursor:pointer;flex:none" style-hover="border-color:var(--accent);color:var(--accent)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"></path></svg>Editar paso</button></sc-if>
+    </div>
+    <h1 style="margin:0 0 14px;font-family:var(--font-display);font-weight:700;font-size:clamp(26px,4.5vw,42px);line-height:1.05;letter-spacing:-.02em;color:var(--text)">{{ step.title }}</h1>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:26px;align-items:center">
+      <span style="display:inline-flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:12px;color:var(--text);background:var(--surface-2);border:1px solid var(--border);padding:5px 11px;border-radius:999px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>{{ step.duration }}</span>
+      <sc-for list="{{ step.techniques }}" as="t" hint-placeholder-count="2">
+        <button onClick="{{ t.onClick }}" style="font-family:var(--font-mono);font-size:12px;color:var(--accent);background:var(--accent-soft);border:none;padding:5px 12px;border-radius:999px;cursor:pointer" style-hover="text-decoration:underline">{{ t.name }}</button>
+      </sc-for>
+    </div>
+
+    <sc-if value="{{ stepUnlocked }}" hint-placeholder-val="{{ true }}">
+      <!-- process gallery header -->
+      <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:12px">
+        <h2 style="margin:0;font-family:var(--font-display);font-weight:600;font-size:19px;color:var(--text)">Galería de proceso</h2>
+        <span style="font-family:var(--font-mono);font-size:11px;color:var(--faint)">Trabajo en progreso</span>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ stepLocked }}" hint-placeholder-val="{{ false }}">
+      <!-- TEASER / LOCK WALL -->
+      <div style="position:relative;border-radius:16px;overflow:hidden;border:1px solid var(--border)">
+        <div style="filter:blur(9px);opacity:.6;pointer-events:none;user-select:none">
+          <div style="aspect-ratio:16/9;background:repeating-linear-gradient(135deg,var(--pa),var(--pa) 12px,var(--pb) 12px,var(--pb) 24px)"></div>
+          <div style="padding:26px 28px;background:var(--surface)">
+            <p style="font-size:17px;line-height:1.7;color:var(--text);margin:0 0 14px">El chipping representa el desgaste de la pintura por el uso y el roce de la tripulación. En el Panther se concentra en los bordes del casco, escotillas y guardabarros. Trabajo en dos capas para lograr profundidad y realismo.</p>
+            <p style="font-size:17px;line-height:1.7;color:var(--text);margin:0">Primero un tono de imprimación desvaída aplicado con esponja para las marcas más sutiles, y encima puntos de óxido oscuro con pincel de punta fina.</p>
+          </div>
+        </div>
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--bg) 30%,transparent)">
+          <div style="max-width:420px;text-align:center;background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:clamp(26px,4vw,40px);box-shadow:0 20px 50px var(--shadow);margin:16px">
+            <span style="width:56px;height:56px;border-radius:16px;background:var(--accent-soft);color:var(--accent);display:inline-flex;align-items:center;justify-content:center;margin-bottom:18px"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="4" y="10.5" width="16" height="9.5" rx="2"></rect><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"></path></svg></span>
+            <h2 style="margin:0 0 10px;font-family:var(--font-display);font-weight:600;font-size:clamp(22px,3vw,28px);line-height:1.15;color:var(--text)">Desbloquea todos los pasos</h2>
+            <p style="margin:0 0 22px;font-size:15px;line-height:1.6;color:var(--muted)">Este paso forma parte del contenido Pro. Accede a todos los pasos, la descarga en PDF y los materiales de cada bitácora.</p>
+            <div style="display:flex;flex-direction:column;gap:9px;text-align:left;margin-bottom:24px">
+              <sc-for list="{{ teaserPerks }}" as="p" hint-placeholder-count="3">
+                <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text)"><span style="color:var(--accent);flex:none"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-11"></path></svg></span>{{ p }}</div>
+              </sc-for>
+            </div>
+            <button onClick="{{ goPricing }}" style="width:100%;background:var(--accent);color:var(--accent-contrast);border:none;border-radius:11px;padding:14px;font-size:15px;font-weight:600;cursor:pointer;margin-bottom:10px">Hazte Pro — 6 €/mes</button>
+            <button onClick="{{ setTierPro }}" style="background:none;border:none;color:var(--muted);font-size:12.5px;cursor:pointer" style-hover="color:var(--accent)">o previsualiza como Pro en esta demo →</button>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ stepUnlocked }}" hint-placeholder-val="{{ true }}">
+      <!-- gallery -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:28px">
+        <sc-for list="{{ step.gallery }}" as="g" hint-placeholder-count="4">
+          <div style="position:relative;aspect-ratio:4/3;border-radius:11px;overflow:hidden;background:repeating-linear-gradient(135deg,var(--pa),var(--pa) 9px,var(--pb) 9px,var(--pb) 18px);display:flex;align-items:flex-end;padding:9px">
+            <span style="font-family:var(--font-mono);font-size:10px;color:var(--faint);background:var(--surface);padding:2px 7px;border-radius:4px">{{ g }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <!-- body -->
+      <div style="max-width:100%">
+        <div style="display:flex;flex-direction:column;gap:16px;background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:18px 20px;margin-bottom:20px;transition:border-color .18s ease" style-hover="border-color:var(--accent)">
+          <sc-for list="{{ step.body }}" as="para" hint-placeholder-count="3">
+            <p style="font-size:17.5px;line-height:1.72;color:var(--text);margin:0;text-wrap:pretty">{{ para }}</p>
+          </sc-for>
+        </div>
+        <div style="display:flex;gap:14px;background:var(--accent-soft);border-radius:13px;padding:18px 20px;margin:4px 0 8px">
+          <span style="color:var(--accent);flex:none;margin-top:1px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.1M12 2a7 7 0 0 1 4 12.7c-.6.5-1 1.3-1 2.1"></path></svg></span>
+          <p style="margin:0;font-size:15px;line-height:1.6;color:var(--text)">{{ step.tip }}</p>
+        </div>
+      </div>
+    </sc-if>
+
+    <!-- prev / next -->
+    <div style="display:flex;gap:12px;margin-top:36px;flex-wrap:wrap">
+      <sc-if value="{{ step.hasPrev }}" hint-placeholder-val="{{ true }}">
+        <button onClick="{{ step.onPrev }}" style="flex:1 1 200px;text-align:left;background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:15px 18px;cursor:pointer" style-hover="border-color:var(--accent)">
+          <div style="font-family:var(--font-mono);font-size:11px;color:var(--muted);margin-bottom:4px">← Anterior</div>
+          <div style="font-size:15px;font-weight:600;color:var(--text)">{{ step.prevTitle }}</div>
+        </button>
+      </sc-if>
+      <sc-if value="{{ step.hasNext }}" hint-placeholder-val="{{ true }}">
+        <button onClick="{{ step.onNext }}" style="flex:1 1 200px;text-align:right;background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:15px 18px;cursor:pointer" style-hover="border-color:var(--accent)">
+          <div style="font-family:var(--font-mono);font-size:11px;color:var(--muted);margin-bottom:4px">Siguiente →</div>
+          <div style="font-size:15px;font-weight:600;color:var(--text)">{{ step.nextTitle }}</div>
+        </button>
+      </sc-if>
+    </div>
+
+    <!-- step comments -->
+    <sc-if value="{{ stepUnlocked }}" hint-placeholder-val="{{ true }}">
+    <div style="margin-top:44px;border-top:1px solid var(--border);padding-top:28px">
+      <h3 style="margin:0 0 18px;font-family:var(--font-display);font-weight:600;font-size:21px;color:var(--text)">Comentarios del paso</h3>
+      <div style="display:flex;flex-direction:column;gap:22px">
+        <sc-for list="{{ stepComments }}" as="cm" hint-placeholder-count="2">
+          <div style="display:flex;gap:11px;background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:15px 18px;transition:border-color .18s ease" style-hover="border-color:var(--accent)">
+            <span style="width:32px;height:32px;flex:none;border-radius:50%;background:var(--surface-2);color:var(--muted);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:10.5px">{{ cm.initials }}</span>
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;align-items:baseline;gap:9px;margin-bottom:3px"><span style="font-size:13.5px;font-weight:600;color:var(--text)">{{ cm.author }}</span><span style="font-family:var(--font-mono);font-size:10.5px;color:var(--faint)">{{ cm.time }}</span></div>
+              <p style="margin:0 0 8px;font-size:14px;line-height:1.55;color:var(--muted)">{{ cm.text }}</p>
+              <div style="display:flex;align-items:center;gap:16px">
+                <button onClick="{{ cm.onLike }}" style="display:flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;padding:0;color:{{ cm.likeColor }};font-size:12.5px;font-weight:600">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="{{ cm.likeFill }}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1L12 21l7.7-7.6 1.1-1a5.5 5.5 0 0 0 0-7.8z"></path></svg>
+                  {{ cm.likeCount }}
+                </button>
+                <button onClick="{{ cm.onToggleReply }}" style="display:flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;padding:0;color:var(--muted);font-size:12.5px;font-weight:600" style-hover="color:var(--accent)">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17l-5-5 5-5M4 12h11a5 5 0 0 1 5 5v1"></path></svg>
+                  Responder
+                </button>
+              </div>
+              <sc-if value="{{ cm.hasReplies }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-direction:column;gap:14px;margin-top:14px;padding-left:14px;border-left:2px solid var(--border)">
+                  <sc-for list="{{ cm.replies }}" as="rp" hint-placeholder-count="1">
+                    <div style="display:flex;gap:9px">
+                      <span style="width:28px;height:28px;flex:none;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:10px">{{ rp.initials }}</span>
+                      <div><div style="display:flex;align-items:baseline;gap:8px;margin-bottom:2px"><span style="font-size:13px;font-weight:600;color:var(--text)">{{ rp.author }}</span><span style="font-family:var(--font-mono);font-size:10.5px;color:var(--faint)">{{ rp.time }}</span></div><p style="margin:0;font-size:13.5px;line-height:1.5;color:var(--muted)">{{ rp.text }}</p></div>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <sc-if value="{{ cm.replyOpen }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+                  <input value="{{ cm.draft }}" onInput="{{ cm.onDraft }}" placeholder="Escribe una respuesta…" style="flex:1;min-width:180px;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:9px 12px;font-size:13.5px;color:var(--text)">
+                  <button onClick="{{ cm.onSendReply }}" style="background:var(--accent);color:var(--accent-contrast);border:none;border-radius:9px;padding:0 16px;font-weight:600;font-size:13px;cursor:pointer">Responder</button>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    </sc-if>
+  </main>
+  </sc-if>
+
+  <!-- ============ STEP EDIT ============ -->
+  <sc-if value="{{ isStepEdit }}" hint-placeholder-val="{{ false }}">
+  <main data-screen-label="Editar paso" style="max-width:820px;margin:0 auto;padding:clamp(20px,3vw,34px) clamp(16px,4vw,40px) 90px;animation:fadeUp .4s ease">
+    <button onClick="{{ stepEditor.onBackProject }}" style="background:none;border:none;color:var(--muted);font-size:13px;cursor:pointer;padding:0;margin-bottom:18px" style-hover="color:var(--accent)">← {{ stepEditor.projectTitle }}</button>
+    <p style="margin:0 0 4px;font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)">Editor de bitácora</p>
+    <h1 style="margin:0 0 26px;font-family:var(--font-display);font-weight:700;font-size:clamp(28px,4.5vw,40px);line-height:1.05;letter-spacing:-.02em;color:var(--text)">{{ stepEditor.heading }}</h1>
+
+    <div style="display:flex;flex-direction:column;gap:22px">
+      <div>
+        <label style="display:block;font-family:var(--font-mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-bottom:7px">Título del paso</label>
+        <input value="{{ stepEditor.title }}" onInput="{{ stepEditor.onTitle }}" placeholder="p. ej. Chipping del casco superior" style="width:100%;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:15px;color:var(--text)">
+      </div>
+
+      <!-- process gallery editor -->
+      <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px">
+          <label style="font-family:var(--font-mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)">Galería de proceso</label>
+          <span style="font-family:var(--font-mono);font-size:10.5px;color:var(--faint)">Fotos del trabajo en progreso de este paso</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px">
+          <button onClick="{{ stepEditor.onAddPhoto }}" style="aspect-ratio:1;border:1.5px dashed var(--border);border-radius:11px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--faint);cursor:pointer;background:none" style-hover="border-color:var(--accent);color:var(--accent)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+            <span style="font-family:var(--font-mono);font-size:10px">Subir foto</span>
+          </button>
+          <sc-for list="{{ stepEditor.photoSlots }}" as="ph" hint-placeholder-count="3">
+            <div style="position:relative;aspect-ratio:1;border-radius:11px;overflow:hidden;background:repeating-linear-gradient(135deg,var(--pa),var(--pa) 8px,var(--pb) 8px,var(--pb) 16px)">
+              <button onClick="{{ stepEditor.onRemovePhoto }}" title="Quitar" style="position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:7px;border:none;background:color-mix(in srgb,var(--bg) 60%,transparent);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- work time -->
+      <div>
+        <label style="display:block;font-family:var(--font-mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-bottom:7px">Tiempo total de trabajo</label>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+          <div style="position:relative;flex:0 0 auto">
+            <span style="position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--faint)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg></span>
+            <input value="{{ stepEditor.duration }}" onInput="{{ stepEditor.onDuration }}" placeholder="p. ej. 2 h 30 min" style="width:200px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:11px 14px 11px 38px;font-family:var(--font-mono);font-size:13px;color:var(--text)">
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <sc-for list="{{ stepEditor.durationPresets }}" as="d" hint-placeholder-count="5">
+              <button onClick="{{ d.onClick }}" style="{{ d.style }}">{{ d.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+      <!-- techniques -->
+      <div>
+        <label style="display:block;font-family:var(--font-mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-bottom:9px">Técnicas asociadas</label>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <sc-for list="{{ stepEditor.techniqueChips }}" as="tc" hint-placeholder-count="8">
+            <button onClick="{{ tc.onToggle }}" style="{{ tc.style }}">{{ tc.name }}</button>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- instructions -->
+      <div>
+        <label style="display:block;font-family:var(--font-mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-bottom:7px">Instrucciones del paso</label>
+        <textarea value="{{ stepEditor.body }}" onInput="{{ stepEditor.onBody }}" placeholder="Explica el proceso con claridad. Separa los párrafos con una línea en blanco." style="width:100%;min-height:170px;resize:vertical;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px 15px;font-size:15px;line-height:1.6;color:var(--text)"></textarea>
+      </div>
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap;padding-top:2px">
+        <button onClick="{{ stepEditor.onSave }}" style="background:var(--accent);color:var(--accent-contrast);border:none;border-radius:11px;padding:13px 24px;font-size:14px;font-weight:600;cursor:pointer">Guardar paso</button>
+        <button onClick="{{ stepEditor.onCancel }}" style="background:none;border:1px solid var(--border);color:var(--text);border-radius:11px;padding:13px 24px;font-size:14px;font-weight:600;cursor:pointer" style-hover="border-color:var(--accent)">Cancelar</button>
+      </div>
+    </div>
+  </main>
+  </sc-if>
+
+  <!-- ============ TECHNIQUE ARCHIVE ============ -->
+  <sc-if value="{{ isTechnique }}" hint-placeholder-val="{{ false }}">
+  <main data-screen-label="Técnica" style="max-width:1200px;margin:0 auto;padding:clamp(22px,4vw,44px) clamp(16px,4vw,40px) 80px;animation:fadeUp .4s ease">
+    <p style="margin:0 0 6px;font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)">Archivo por técnica</p>
+    <h1 style="margin:0 0 10px;font-family:var(--font-display);font-weight:700;font-size:clamp(32px,6vw,54px);line-height:1;letter-spacing:-.02em;color:var(--text)">{{ technique }}</h1>
+    <p style="margin:0 0 26px;font-size:16px;line-height:1.6;color:var(--muted);max-width:620px">{{ techniqueDesc }}</p>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:32px">
+      <sc-for list="{{ techniqueSwitcher }}" as="tk" hint-placeholder-count="8">
+        <button onClick="{{ tk.onClick }}" style="{{ tk.style }}">{{ tk.name }}</button>
+      </sc-for>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px">
+      <sc-for list="{{ techniqueGrid }}" as="c" hint-placeholder-count="6">
+        <article style="background:var(--surface);border:2px solid var(--border);border-radius:6px;overflow:hidden;box-shadow:0 1px 2px var(--shadow);transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease" style-hover="transform:translateY(-4px);box-shadow:var(--bp-shadow);border-color:var(--primary)">
+          <button onClick="{{ c.onOpen }}" style="position:relative;width:100%;border:none;padding:0;cursor:pointer;aspect-ratio:4/3;background:repeating-linear-gradient(135deg,var(--pa),var(--pa) 10px,var(--pb) 10px,var(--pb) 20px);display:flex;align-items:center;justify-content:center">
+            <span style="font-family:var(--font-mono);font-size:10.5px;color:var(--faint);background:var(--surface);padding:3px 8px;border-radius:5px">{{ c.thumb }}</span>
+            <span style="position:absolute;top:10px;left:10px;font-family:var(--font-mono);font-size:9.5px;color:var(--text);background:var(--surface);padding:3px 8px;border-radius:999px;border:1px solid var(--border)">{{ c.kind }}</span>
+          </button>
+          <div style="padding:14px 15px 16px">
+            <button onClick="{{ c.onOpen }}" style="text-align:left;background:none;border:none;padding:0;cursor:pointer;width:100%">
+              <h3 style="margin:0 0 5px;font-family:var(--font-display);font-weight:600;font-size:17px;line-height:1.15;color:var(--text)">{{ c.title }}</h3>
+            </button>
+            <div style="font-size:12.5px;color:var(--muted)">{{ c.meta }}</div>
+          </div>
+        </article>
+      </sc-for>
+    </div>
+  </main>
+  </sc-if>
+
+  <!-- ============ PRICING ============ -->
+  <sc-if value="{{ isPricing }}" hint-placeholder-val="{{ false }}">
+  <main data-screen-label="Precios" style="max-width:1120px;margin:0 auto;padding:clamp(30px,5vw,60px) clamp(16px,4vw,40px) 90px;animation:fadeUp .4s ease">
+    <div style="text-align:center;max-width:640px;margin:0 auto 44px">
+      <p style="margin:0 0 8px;font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)">Planes</p>
+      <h1 style="margin:0 0 12px;font-family:var(--font-display);font-weight:700;font-size:clamp(34px,6vw,52px);line-height:1.02;letter-spacing:-.02em;color:var(--text)">Del banco de trabajo a la comunidad</h1>
+      <p style="margin:0;font-size:17px;line-height:1.6;color:var(--muted)">El valor está en el paso a paso. Elige cuánto quieres profundizar.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;align-items:start">
+      <sc-for list="{{ pricing }}" as="p" hint-placeholder-count="3">
+        <div style="{{ p.cardStyle }}">
+          <sc-if value="{{ p.featured }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--accent);color:var(--accent-contrast);font-family:var(--font-mono);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;padding:5px 14px;border-radius:999px">Más popular</span></sc-if>
+          <h3 style="margin:0 0 4px;font-family:var(--font-display);font-weight:600;font-size:24px;color:var(--text)">{{ p.name }}</h3>
+          <p style="margin:0 0 18px;font-size:13.5px;color:var(--muted);min-height:38px">{{ p.blurb }}</p>
+          <div style="display:flex;align-items:baseline;gap:5px;margin-bottom:20px">
+            <span style="font-family:var(--font-display);font-weight:700;font-size:42px;color:var(--text)">{{ p.price }}</span>
+            <span style="font-family:var(--font-mono);font-size:13px;color:var(--muted)">{{ p.per }}</span>
+          </div>
+          <button onClick="{{ p.onSelect }}" style="{{ p.btnStyle }}">{{ p.cta }}</button>
+          <div style="height:1px;background:var(--border);margin:22px 0"></div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <sc-for list="{{ p.features }}" as="f" hint-placeholder-count="5">
+              <div style="display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:1.4;color:var(--text)"><span style="color:var(--accent);flex:none;margin-top:2px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-11"></path></svg></span>{{ f }}</div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </main>
+  </sc-if>
+
+  <!-- ============ CREATOR ============ -->
+  <sc-if value="{{ isCreator }}" hint-placeholder-val="{{ false }}">
+  <main data-screen-label="Mis proyectos" style="max-width:1120px;margin:0 auto;padding:clamp(22px,4vw,44px) clamp(16px,4vw,40px) 80px;animation:fadeUp .4s ease">
+    <sc-if value="{{ creatorLocked }}" hint-placeholder-val="{{ false }}">
+      <div style="max-width:520px;margin:40px auto;text-align:center;background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:clamp(30px,5vw,48px)">
+        <span style="width:56px;height:56px;border-radius:16px;background:var(--accent-soft);color:var(--accent);display:inline-flex;align-items:center;justify-content:center;margin-bottom:18px"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg></span>
+        <h1 style="margin:0 0 10px;font-family:var(--font-display);font-weight:600;font-size:28px;color:var(--text)">Crea tus propias bitácoras</h1>
+        <p style="margin:0 0 24px;font-size:15px;line-height:1.6;color:var(--muted)">El plan Modelista te permite publicar tus builds paso a paso, con fotos, técnicas y materiales. Documenta tu banco de trabajo.</p>
+        <button onClick="{{ goPricing }}" style="background:var(--accent);color:var(--accent-contrast);border:none;border-radius:11px;padding:14px 22px;font-size:15px;font-weight:600;cursor:pointer;margin-right:10px">Ver plan Modelista</button>
+        <button onClick="{{ setTierModelista }}" style="background:none;border:1px solid var(--border);color:var(--text);border-radius:11px;padding:14px 22px;font-size:14px;font-weight:600;cursor:pointer" style-hover="border-color:var(--accent);color:var(--accent)">Previsualizar como Modelista</button>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ creatorUnlocked }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:26px">
+        <div>
+          <p style="margin:0 0 4px;font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)">Panel del modelista</p>
+          <h1 style="margin:0;font-family:var(--font-display);font-weight:700;font-size:clamp(30px,5vw,44px);line-height:1;letter-spacing:-.02em;color:var(--text)">Mis proyectos</h1>
+        </div>
+        <button onClick="{{ toggleEditor }}" style="display:flex;align-items:center;gap:8px;background:var(--accent);color:var(--accent-contrast);border:none;border-radius:11px;padding:12px 18px;font-size:14px;font-weight:600;cursor:pointer">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>{{ editorToggleLabel }}
+        </button>
+      </div>
+
+      <!-- stats -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:26px">
+        <sc-for list="{{ creatorStats }}" as="st" hint-placeholder-count="4">
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:16px 18px">
+            <div style="font-family:var(--font-display);font-weight:700;font-size:30px;color:var(--text);line-height:1">{{ st.value }}</div>
+            <div style="font-family:var(--font-mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-top:5px">{{ st.label }}</div>
+          </div>
+        </sc-for>
+      </div>
+
+      <!-- editor form -->
+      <sc-if value="{{ editorOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="background:var(--surface);border:1px solid var(--accent);border-radius:16px;padding:clamp(20px,3vw,30px);margin-bottom:28px">
+          <h2 style="margin:0 0 20px;font-family:var(--font-display);font-weight:600;font-size:23px;color:var(--text)">Nueva bitácora</h2>
+          <div style="display:flex;flex-direction:column;gap:18px">
+            <div>
+              <label style="display:block;font-family:var(--font-mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-bottom:7px">Título del proyecto</label>
+              <input value="{{ editor.title }}" onInput="{{ editor.onTitle }}" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;font-size:15px;color:var(--text)">
+            </div>
+            <div>
+              <label style="display:block;font-family:var(--font-mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-bottom:7px">Fotos del build</label>
+              <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px">
+                <div style="aspect-ratio:1;border:1.5px dashed var(--border);border-radius:11px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--faint);cursor:pointer" style-hover="border-color:var(--accent);color:var(--accent)">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>
+                  <span style="font-family:var(--font-mono);font-size:10px">Subir</span>
+                </div>
+                <div style="aspect-ratio:1;border-radius:11px;background:repeating-linear-gradient(135deg,var(--pa),var(--pa) 8px,var(--pb) 8px,var(--pb) 16px)"></div>
+                <div style="aspect-ratio:1;border-radius:11px;background:repeating-linear-gradient(135deg,var(--pa),var(--pa) 8px,var(--pb) 8px,var(--pb) 16px)"></div>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px">
+              <div>
+                <label style="display:block;font-family:var(--font-mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-bottom:7px">Escala</label>
+                <input value="{{ editor.scale }}" onInput="{{ editor.onScale }}" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-size:14px;color:var(--text)">
+              </div>
+              <div>
+                <label style="display:block;font-family:var(--font-mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-bottom:7px">Temática</label>
+                <select value="{{ editor.theme }}" onChange="{{ editor.onTheme }}" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-size:14px;color:var(--text)">
+                  <sc-for list="{{ themeOptions }}" as="o" hint-placeholder-count="5"><option value="{{ o }}">{{ o }}</option></sc-for>
+                </select>
+              </div>
+              <div>
+                <label style="display:block;font-family:var(--font-mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-bottom:7px">Dificultad</label>
+                <select value="{{ editor.difficulty }}" onChange="{{ editor.onDifficulty }}" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-size:14px;color:var(--text)">
+                  <sc-for list="{{ difficultyOptions }}" as="o" hint-placeholder-count="3"><option value="{{ o }}">{{ o }}</option></sc-for>
+                </select>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px">
+              <div>
+                <label style="display:block;font-family:var(--font-mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-bottom:7px">Fabricante</label>
+                <input value="{{ editor.maker }}" onInput="{{ editor.onMaker }}" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-size:14px;color:var(--text)">
+              </div>
+              <div>
+                <label style="display:block;font-family:var(--font-mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-bottom:7px">Referencia del kit</label>
+                <input value="{{ editor.ref }}" onInput="{{ editor.onRef }}" style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:11px 13px;font-size:14px;color:var(--text)">
+              </div>
+            </div>
+            <div>
+              <label style="display:block;font-family:var(--font-mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-bottom:9px">Técnicas</label>
+              <div style="display:flex;flex-wrap:wrap;gap:8px">
+                <sc-for list="{{ editor.techniqueChips }}" as="tc" hint-placeholder-count="8">
+                  <button onClick="{{ tc.onToggle }}" style="{{ tc.style }}">{{ tc.name }}</button>
+                </sc-for>
+              </div>
+            </div>
+            <div>
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px">
+                <label style="font-family:var(--font-mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)">Pasos (arrastra el orden con las flechas)</label>
+                <button onClick="{{ editor.onAddStep }}" style="display:flex;align-items:center;gap:5px;background:var(--accent-soft);color:var(--accent);border:none;border-radius:8px;padding:6px 11px;font-size:12.5px;font-weight:600;cursor:pointer">+ Añadir paso</button>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <sc-for list="{{ editor.stepRows }}" as="sr" hint-placeholder-count="3">
+                  <div style="display:flex;align-items:center;gap:10px;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:8px 10px">
+                    <span style="width:26px;flex:none;text-align:center;font-family:var(--font-mono);font-size:13px;color:var(--faint)">{{ sr.n }}</span>
+                    <input value="{{ sr.title }}" onInput="{{ sr.onTitle }}" style="flex:1;min-width:0;background:none;border:none;font-size:14px;color:var(--text);padding:4px 2px">
+                    <div style="display:flex;gap:3px;flex:none">
+                      <button onClick="{{ sr.onUp }}" style="{{ sr.upStyle }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 15l6-6 6 6"></path></svg></button>
+                      <button onClick="{{ sr.onDown }}" style="{{ sr.downStyle }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 9l6 6 6-6"></path></svg></button>
+                      <button onClick="{{ sr.onRemove }}" style="width:28px;height:28px;flex:none;border-radius:7px;border:1px solid var(--border);background:none;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center" style-hover="color:var(--rust);border-color:var(--rust)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;padding-top:4px">
+              <button onClick="{{ toggleEditor }}" style="background:var(--accent);color:var(--accent-contrast);border:none;border-radius:11px;padding:13px 22px;font-size:14px;font-weight:600;cursor:pointer">Publicar bitácora</button>
+              <button onClick="{{ toggleEditor }}" style="background:none;border:1px solid var(--border);color:var(--text);border-radius:11px;padding:13px 22px;font-size:14px;font-weight:600;cursor:pointer" style-hover="border-color:var(--accent)">Guardar borrador</button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- project list -->
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <sc-for list="{{ myProjects }}" as="mp" hint-placeholder-count="4">
+          <div style="display:flex;align-items:center;gap:16px;background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:12px;flex-wrap:wrap">
+            <span style="width:88px;height:64px;flex:none;border-radius:9px;background:repeating-linear-gradient(135deg,var(--pa),var(--pa) 8px,var(--pb) 8px,var(--pb) 16px);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:9px;color:var(--faint);text-align:center;padding:4px">{{ mp.thumb }}</span>
+            <div style="flex:1;min-width:160px">
+              <div style="font-family:var(--font-display);font-size:18px;font-weight:600;color:var(--text)">{{ mp.title }}</div>
+              <div style="font-family:var(--font-mono);font-size:11.5px;color:var(--muted);margin-top:3px">{{ mp.meta }}</div>
+            </div>
+            <span style="display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:11px;color:var(--text);background:var(--surface-2);padding:5px 11px;border-radius:999px"><span style="width:7px;height:7px;border-radius:50%;background:{{ mp.statusColor }}"></span>{{ mp.status }}</span>
+            <div style="display:flex;gap:7px">
+              <button onClick="{{ mp.onOpen }}" style="background:none;border:1px solid var(--border);color:var(--text);border-radius:9px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer" style-hover="border-color:var(--accent);color:var(--accent)">Ver</button>
+              <button onClick="{{ toggleEditor }}" style="background:none;border:1px solid var(--border);color:var(--text);border-radius:9px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer" style-hover="border-color:var(--accent);color:var(--accent)">Editar</button>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+  </main>
+  </sc-if>
+
+  <!-- ============ PROFILE ============ -->
+  <sc-if value="{{ isProfile }}" hint-placeholder-val="{{ false }}">
+  <main data-screen-label="Perfil" style="animation:fadeUp .4s ease">
+    <div style="height:clamp(120px,20vw,190px);background:repeating-linear-gradient(135deg,var(--pa),var(--pa) 13px,var(--pb) 13px,var(--pb) 26px);border-bottom:1px solid var(--border)"></div>
+    <div style="max-width:1120px;margin:0 auto;padding:0 clamp(16px,4vw,40px) 80px">
+      <div style="display:flex;gap:20px;align-items:flex-end;margin-top:-44px;margin-bottom:24px;flex-wrap:wrap">
+        <span style="width:96px;height:96px;flex:none;border-radius:24px;background:var(--accent-soft);color:var(--accent);border:4px solid var(--bg);display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:26px">{{ profile.initials }}</span>
+        <div style="flex:1;min-width:200px;padding-bottom:4px">
+          <h1 style="margin:0;font-family:var(--font-display);font-weight:700;font-size:clamp(28px,4.5vw,40px);line-height:1;letter-spacing:-.02em;color:var(--text)">{{ profile.name }}</h1>
+          <div style="display:flex;align-items:center;gap:12px;margin-top:7px;flex-wrap:wrap;font-family:var(--font-mono);font-size:12.5px;color:var(--muted)">
+            <span>{{ profile.handle }}</span><span>·</span><span>{{ profile.location }}</span><span>·</span><span>Desde {{ profile.joined }}</span>
+          </div>
+        </div>
+        <button style="background:var(--accent);color:var(--accent-contrast);border:none;border-radius:11px;padding:12px 22px;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:4px">Seguir</button>
+      </div>
+      <p style="margin:0 0 18px;font-size:16px;line-height:1.6;color:var(--text);max-width:600px">{{ profile.bio }}</p>
+      <div style="display:flex;flex-wrap:wrap;gap:9px;margin-bottom:24px">
+        <sc-for list="{{ profile.socials }}" as="so" hint-placeholder-count="3">
+          <a href="{{ so.url }}" style="display:inline-flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:7px 14px 7px 12px;text-decoration:none;color:var(--text)" style-hover="border-color:var(--accent);color:var(--accent)">
+            {{ so.iconEl }}
+            <span style="font-family:var(--font-mono);font-size:12.5px">{{ so.handle }}</span>
+          </a>
+        </sc-for>
+      </div>
+      <div style="display:flex;gap:28px;margin-bottom:30px;flex-wrap:wrap">
+        <sc-for list="{{ profile.stats }}" as="st" hint-placeholder-count="3">
+          <div><span style="font-family:var(--font-display);font-weight:700;font-size:24px;color:var(--text)">{{ st.value }}</span> <span style="font-size:14px;color:var(--muted)">{{ st.label }}</span></div>
+        </sc-for>
+      </div>
+      <div style="display:flex;gap:2px;border-bottom:1px solid var(--border);margin-bottom:26px">
+        <sc-for list="{{ profileTabs }}" as="pt" hint-placeholder-count="2">
+          <button onClick="{{ pt.onClick }}" style="{{ pt.style }}">{{ pt.label }}</button>
+        </sc-for>
+      </div>
+
+      <sc-if value="{{ profileShowBuilds }}" hint-placeholder-val="{{ true }}">
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:20px">
+          <sc-for list="{{ profile.builds }}" as="b" hint-placeholder-count="6">
+            <article style="background:var(--surface);border:2px solid var(--border);border-radius:6px;overflow:hidden;box-shadow:0 1px 2px var(--shadow);transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease" style-hover="transform:translateY(-4px);box-shadow:var(--bp-shadow);border-color:var(--primary)">
+              <button onClick="{{ b.onOpen }}" style="position:relative;width:100%;border:none;padding:0;cursor:pointer;aspect-ratio:4/3;background:repeating-linear-gradient(135deg,var(--pa),var(--pa) 10px,var(--pb) 10px,var(--pb) 20px);display:flex;align-items:center;justify-content:center">
+                <span style="font-family:var(--font-mono);font-size:10px;color:var(--faint);background:var(--surface);padding:3px 8px;border-radius:5px">{{ b.thumb }}</span>
+                <span style="position:absolute;top:10px;right:10px;display:inline-flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:9.5px;color:var(--text);background:var(--surface);padding:3px 8px;border-radius:999px;border:1px solid var(--border)"><span style="width:6px;height:6px;border-radius:50%;background:{{ b.statusColor }}"></span>{{ b.status }}</span>
+              </button>
+              <div style="padding:13px 15px 15px">
+                <button onClick="{{ b.onOpen }}" style="text-align:left;background:none;border:none;padding:0;cursor:pointer;width:100%"><h3 style="margin:0 0 4px;font-family:var(--font-display);font-weight:600;font-size:17px;color:var(--text)">{{ b.title }}</h3></button>
+                <div style="font-family:var(--font-mono);font-size:11px;color:var(--muted)">{{ b.meta }}</div>
+              </div>
+            </article>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ profileShowActivity }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:2px;max-width:640px">
+          <sc-for list="{{ profile.activity }}" as="ac" hint-placeholder-count="5">
+            <div style="display:flex;gap:14px;padding:15px 0;border-bottom:1px solid var(--border)">
+              <span style="width:34px;height:34px;flex:none;border-radius:9px;background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center">{{ ac.icon }}</span>
+              <div style="flex:1">
+                <p style="margin:0;font-size:14.5px;color:var(--text)">{{ ac.text }}</p>
+                <span style="font-family:var(--font-mono);font-size:11px;color:var(--faint)">{{ ac.time }}</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ profileShowFavorites }}" hint-placeholder-val="{{ false }}">
+        <sc-if value="{{ hasFavs }}" hint-placeholder-val="{{ true }}">
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:20px">
+          <sc-for list="{{ favBuilds }}" as="b" hint-placeholder-count="3">
+            <article style="position:relative;background:var(--surface);border:2px solid var(--border);border-radius:6px;overflow:hidden;box-shadow:0 1px 2px var(--shadow);transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease" style-hover="transform:translateY(-4px);box-shadow:var(--bp-shadow);border-color:var(--primary)">
+              <span style="position:absolute;top:10px;right:10px;z-index:2;width:30px;height:30px;border-radius:50%;background:var(--surface);color:var(--accent);display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,.2)"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.5 4.7a4.2 4.2 0 0 0-6 0 4.3 4.3 0 0 0 0 6L12 17.2l6.5-6.5a4.3 4.3 0 0 0 0-6 4.2 4.2 0 0 0-6 0l-.5.5z"></path></svg></span>
+              <button onClick="{{ b.onOpen }}" style="position:relative;width:100%;border:none;padding:0;cursor:pointer;aspect-ratio:4/3;background:repeating-linear-gradient(135deg,var(--pa),var(--pa) 10px,var(--pb) 10px,var(--pb) 20px);display:flex;align-items:center;justify-content:center">
+                <span style="font-family:var(--font-mono);font-size:10px;color:var(--faint);background:var(--surface);padding:3px 8px;border-radius:5px">{{ b.thumb }}</span>
+                <span style="position:absolute;top:10px;left:10px;display:inline-flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:9.5px;color:var(--text);background:var(--surface);padding:3px 8px;border-radius:999px;border:1px solid var(--border)"><span style="width:6px;height:6px;border-radius:50%;background:{{ b.statusColor }}"></span>{{ b.status }}</span>
+              </button>
+              <div style="padding:13px 15px 15px">
+                <button onClick="{{ b.onOpen }}" style="text-align:left;background:none;border:none;padding:0;cursor:pointer;width:100%"><h3 style="margin:0 0 4px;font-family:var(--font-display);font-weight:600;font-size:17px;color:var(--text)">{{ b.title }}</h3></button>
+                <div style="font-family:var(--font-mono);font-size:11px;color:var(--muted)">{{ b.meta }}</div>
+              </div>
+            </article>
+          </sc-for>
+        </div>
+        </sc-if>
+        <sc-if value="{{ noFavs }}" hint-placeholder-val="{{ false }}">
+        <div style="text-align:center;padding:56px 20px;background:var(--surface);border:1px dashed var(--border);border-radius:16px">
+          <span style="width:48px;height:48px;border-radius:13px;background:var(--accent-soft);color:var(--accent);display:inline-flex;align-items:center;justify-content:center;margin-bottom:14px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M11.5 4.7a4.2 4.2 0 0 0-6 0 4.3 4.3 0 0 0 0 6L12 17.2l6.5-6.5a4.3 4.3 0 0 0 0-6 4.2 4.2 0 0 0-6 0l-.5.5z"></path></svg></span>
+          <h3 style="margin:0 0 6px;font-family:var(--font-display);font-weight:600;font-size:19px;color:var(--text)">Aún no hay favoritos</h3>
+          <p style="margin:0;font-size:14px;color:var(--muted)">Guarda builds desde el feed o la página de proyecto para reunirlos aquí.</p>
+        </div>
+        </sc-if>
+      </sc-if>
+    </div>
+  </main>
+  </sc-if>
+  <footer style="border-top:1px solid var(--border);background:var(--surface)">
+    <div style="max-width:1200px;margin:0 auto;padding:28px clamp(16px,4vw,40px);display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap">
+      <span style="font-family:var(--font-display);font-size:18px;font-weight:600;color:var(--text)">Escala<span style="color:var(--accent)">.</span></span>
+      <span style="font-family:var(--font-mono);font-size:11px;color:var(--faint)">Bitácoras de modelismo estático · prototipo</span>
+    </div>
+  </footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:900},&quot;accentColor&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#F7941D&quot;,&quot;options&quot;:[&quot;#F7941D&quot;,&quot;#1E4A7B&quot;,&quot;#22A852&quot;,&quot;#8B5CF6&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Estilo&quot;,&quot;label&quot;:&quot;Color de acento&quot;},&quot;defaultTheme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Claro&quot;,&quot;Oscuro&quot;],&quot;default&quot;:&quot;Claro&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Estilo&quot;,&quot;label&quot;:&quot;Tema inicial&quot;},&quot;previewTier&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Suscriptor&quot;,&quot;Pro&quot;,&quot;Modelista&quot;],&quot;default&quot;:&quot;Suscriptor&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Demo&quot;,&quot;label&quot;:&quot;Ver la app como&quot;}}">
+class Component extends DCLogic {
+  state = {
+    view:'feed', theme:'light', tier:'free', feedFilter:'all', isNarrow:false, menuOpen:false, acc:{autor:false,materiales:true},
+    projectId:'panther', stepIndex:5, technique:'Aerografía', profileTab:'builds',
+    editorOpen:false,
+    stepEd:null,
+    ci:{},
+    favs:{spitfire:true},
+    editor:{ title:'Char B1 bis — Francia 1940', theme:'Blindados', scale:'1/35', maker:'Tamiya', ref:'35282', difficulty:'Avanzado',
+      techniques:['Aerografía','Chipping / desconchados'],
+      steps:[{title:'Montaje del casco y tren de rodaje'},{title:'Imprimación y preshading'},{title:'Capa base y modulación de color'}] }
+  };
+
+  componentDidMount(){
+    this._resize=()=>{ const n=window.innerWidth<1000; if(n!==this.state.isNarrow) this.setState({isNarrow:n, menuOpen:n?this.state.menuOpen:false}); };
+    this._resize(); window.addEventListener('resize',this._resize);
+    const tm={'Suscriptor':'free','Pro':'pro','Modelista':'modelista'};
+    const patch={};
+    if(this.props.defaultTheme==='Oscuro') patch.theme='dark';
+    if(this.props.previewTier&&tm[this.props.previewTier]) patch.tier=tm[this.props.previewTier];
+    if(Object.keys(patch).length) this.setState(patch);
+  }
+  componentWillUnmount(){ if(this._resize) window.removeEventListener('resize',this._resize); }
+  componentDidUpdate(prev){
+    const tm={'Suscriptor':'free','Pro':'pro','Modelista':'modelista'};
+    if(prev.defaultTheme!==this.props.defaultTheme) this.setState({theme:this.props.defaultTheme==='Oscuro'?'dark':'light'});
+    if(prev.previewTier!==this.props.previewTier&&tm[this.props.previewTier]) this.setState({tier:tm[this.props.previewTier]});
+  }
+
+  themeVars(theme){
+    const L={bg:'hsl(210 20% 98%)',surface:'hsl(0 0% 100%)','surface-2':'hsl(210 14% 93%)',text:'hsl(213 31% 15%)',muted:'hsl(213 16% 45%)',faint:'hsl(213 16% 58%)',border:'hsl(213 20% 86%)',accent:'hsl(32 95% 52%)','accent-contrast':'#ffffff',primary:'hsl(213 56% 24%)','primary-contrast':'hsl(210 40% 98%)',rust:'hsl(0 74% 52%)',grid:'hsl(213 30% 92%)',pa:'hsl(213 34% 90%)',pb:'hsl(213 28% 95%)',shadow:'hsl(213 31% 15% / .09)',bpborder:'hsl(213 20% 82%)'};
+    const D={bg:'hsl(213 31% 10%)',surface:'hsl(213 31% 13%)','surface-2':'hsl(213 31% 18%)',text:'hsl(210 20% 95%)',muted:'hsl(213 16% 62%)',faint:'hsl(213 16% 48%)',border:'hsl(213 31% 24%)',accent:'hsl(32 95% 54%)','accent-contrast':'#1a1205',primary:'hsl(213 56% 58%)','primary-contrast':'hsl(213 31% 10%)',rust:'hsl(0 62% 52%)',grid:'hsl(213 31% 16%)',pa:'hsl(213 31% 19%)',pb:'hsl(213 31% 14%)',shadow:'rgba(0,0,0,.5)',bpborder:'hsl(213 31% 28%)'};
+    const v=Object.assign({},theme==='dark'?D:L);
+    const accentBase=this.props.accentColor;
+    if(accentBase){ v.accent=theme==='dark'?`color-mix(in srgb, ${accentBase} 82%, #ffffff)`:accentBase; }
+    v['accent-soft']='color-mix(in srgb, var(--accent) 14%, var(--bg))';
+    v['primary-soft']='color-mix(in srgb, var(--primary) 12%, var(--bg))';
+    v['bp-shadow']='4px 4px 0 0 var(--bpborder)';
+    return Object.keys(v).map(k=>`--${k}:${v[k]}`).join(';')
+      + ";--font-display:'Raleway',system-ui,sans-serif;--font-body:'Montserrat',system-ui,sans-serif;--font-mono:'JetBrains Mono',ui-monospace,monospace"
+      + ";min-height:100vh;background:var(--bg);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:40px 40px;color:var(--text);font-family:var(--font-body);transition:background .35s ease,color .35s ease";
+  }
+
+  initials(name){ return name.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase(); }
+  statusColor(s){ return s==='Terminado' ? 'var(--primary)' : 'var(--accent)'; }
+
+  get DB(){
+    const GEN=[
+      {title:'Montaje y preparación de subconjuntos',thumb:'montaje',techniques:['Masking'],duration:'3 h 30 min',gallery:['subconjuntos','encaje seco','limpieza líneas','pegado']},
+      {title:'Imprimación y preshading',thumb:'imprimación',techniques:['Imprimación','Preshading'],duration:'1 h 45 min',gallery:['negro base','cenital','preshading','detalle']},
+      {title:'Capa base y modulación de color',thumb:'color base',techniques:['Aerografía'],duration:'2 h 15 min',gallery:['capa base','modulación','aclarados','sombras']},
+      {title:'Lavados, filtros y envejecido final',thumb:'envejecido',techniques:['Lavados con óleos','Pigmentos'],duration:'4 h',gallery:['pin wash','filtros','pigmentos','sellado']},
+    ];
+    const CH=[
+      {title:'El chipping representa el desgaste de la pintura por el uso, el roce de la tripulación y los impactos. En el Panther se concentra en los bordes del casco, escotillas, guardabarros y zonas de paso.',
+       tip:'Nota técnica — diluye el óleo de óxido con un toque de blanco titanio para el borde superior de cada desconchado; simula el reflejo del metal recién arañado.'},
+    ];
+    const panther={
+      id:'panther',title:'Panther Ausf. G',subtitle:'Kursk, verano de 1943',scale:'1/35',theme:'Blindados',maker:'Tamiya',ref:'35065',difficulty:'Avanzado',status:'WIP',author:'Marta Vidal',authorId:'marta',cover:'Panther Ausf. G — vista 3/4',
+      finishedGallery:['3/4 frontal','perfil izq.','torreta cenital','detalle glacis','tren de rodaje','popa · motor'],
+      materials:[{name:'Lista de pinturas AK · Tamiya.pdf',size:'240 KB'},{name:'Plantilla de camuflaje 1-35.pdf',size:'1.1 MB'},{name:'Referencias Kursk 1943.zip',size:'8.4 MB'}],
+      comments:[
+        {author:'Javier Sáez',time:'hace 2 d',likes:12,text:'El chipping del glacis quedó espectacular. ¿Óleo o acrílico para los desconchados más pequeños?'},
+        {author:'Lucía Romero',time:'hace 1 d',likes:7,text:'Seguimiento total a este build. La modulación del paso 3 es de manual, gracias por documentarla tan bien.'},
+      ],
+      steps:[
+        {title:'Montaje del casco y tren de rodaje',thumb:'montaje · casco',techniques:['Masking'],duration:'4 h 20 min',gallery:['subconj. casco','ruedas','tensado orugas','encaje torreta'],
+          body:['Empiezo por el casco inferior y el tren de rodaje: es la base sobre la que se apoya todo el envejecido posterior, así que dedico tiempo a que los ejes queden alineados y las ruedas giren sin holgura.','Dejo las orugas sin pegar y la torreta separada para poder pintar por subconjuntos. Enmascaro las zonas de contacto para que el pegamento agarre bien más adelante.'],tip:'Consejo — numera y fotografía cada subconjunto antes de separarlo; recuperar el orden de montaje al pintar es mucho más rápido.'},
+        {title:'Imprimación y preshading',thumb:'imprimación',techniques:['Imprimación','Preshading'],duration:'2 h',gallery:['negro base','cenital gris','preshading paneles','detalle tornillería'],
+          body:['Imprimo con negro por debajo y voy levantando con gris claro desde arriba (luz cenital), fijando de una vez el volumen y las sombras del vehículo.','El preshading marca paneles, tornillería y huecos. No busco el contraste final aquí, solo un mapa de luces que la capa base dejará translucir.'],tip:'Consejo — deja secar la imprimación 24 h antes de la capa de color; ganarás adherencia y evitarás levantar el preshading.'},
+        {title:'Capa base y modulación de color',thumb:'modulación',techniques:['Aerografía'],duration:'3 h 15 min',gallery:['base dunkelgelb','modulación paneles','aclarado bordes','sombras recovecos']},
+        {title:'Camuflaje a pincel y aerógrafo',thumb:'camuflaje',techniques:['Aerografía','Masking'],duration:'2 h 40 min',gallery:['patrón verde','franjas óxido','difuminado','contorno']},
+        {title:'Calcas y sellado con barniz',thumb:'calcas',techniques:['Barnizado'],duration:'1 h 30 min',gallery:['calcas torreta','micro-sol','sellado brillo','check final']},
+        {title:'Chipping del casco superior',thumb:'glacis · esponja',techniques:['Chipping / desconchados','Lavados con óleos'],duration:'2 h 50 min',gallery:['glacis · esponja','escotilla motor','óxido a pincel','guardabarros'],
+          body:[CH[0].title,'Trabajo en dos capas: primero un tono de imprimación desvaída aplicado con esponja para las marcas más sutiles, y encima puntos de óxido oscuro con pincel de punta fina solo donde el metal quedaría realmente expuesto.','La clave es la contención: menos es más. Un desconchado creíble es pequeño, irregular y agrupado en zonas lógicas de contacto, nunca repartido de forma uniforme por toda la superficie.'],tip:CH[0].tip},
+        {title:'Lavados con óleos y filtros',thumb:'lavados',techniques:['Lavados con óleos','Filtros'],duration:'3 h 30 min',gallery:['pin wash','filtro tierra','óleo recovecos','difuminado']},
+        {title:'Pigmentos, barro y polvo final',thumb:'pigmentos',techniques:['Pigmentos'],duration:'2 h 10 min',gallery:['barro faldones','polvo motor','pigmento orugas','sellado mate']},
+      ],
+    };
+    const mk=(id,title,subtitle,scale,theme,maker,ref,difficulty,status,author,authorId,cover)=>({id,title,subtitle,scale,theme,maker,ref,difficulty,status,author,authorId,cover,steps:GEN,finishedGallery:['vista general','perfil','tres cuartos','detalle','cenital','base'],materials:[{name:'Lista de pinturas.pdf',size:'210 KB'},{name:'Referencias fotográficas.zip',size:'5.2 MB'}],comments:[{author:'Marta Vidal',time:'hace 3 d',likes:5,text:'Qué acabado tan limpio. ¿Sellaste con mate antes de los pigmentos?'}]});
+    return { panther,
+      spitfire:mk('spitfire','Spitfire Mk.IX','RAF · Normandía, 1944','1/48','Aviación','Eduard','8281','Intermedio','Terminado','Javier Sáez','javier','Spitfire Mk.IX — perfil'),
+      diorama:mk('diorama','Estación abandonada','Frente del Este, 1944','1/35','Dioramas','Scratch','—','Experto','WIP','Lucía Romero','lucia','Diorama — estación'),
+      yamato:mk('yamato','IJN Yamato','Operación Ten-Go, 1945','1/700','Naval','Tamiya','78025','Avanzado','Terminado','Kenji Mora','kenji','Yamato — cubierta'),
+      figura:mk('figura','Caballero teutónico','Siglo XV','54 mm','Figuras','Andrea Miniatures','54-118','Intermedio','Terminado','Andrea Gil','andrea','Figura — busto'),
+      sherman:mk('sherman','Sherman M4A3','Ardenas, invierno de 1944','1/35','Blindados','Dragon','6255','Intermedio','WIP','Diego Ferrer','diego','Sherman — 3/4'),
+    };
+  }
+
+  get feedRaw(){ return [
+    {kind:'step',badge:'Nuevo paso',projectId:'panther',stepIndex:5,stepLabel:'Chipping del casco superior',project:'Panther Ausf. G',author:'Marta Vidal',tech:'Chipping / desconchados',thumb:'glacis · esponja',time:'hace 3 h',pro:true},
+    {kind:'done',projectId:'spitfire',stepLabel:'Spitfire Mk.IX',project:'Spitfire Mk.IX',author:'Javier Sáez',tech:'Barnizado',thumb:'Spitfire terminado',time:'hace 6 h',pro:false},
+    {kind:'step',badge:'Nuevo paso',projectId:'sherman',stepIndex:1,stepLabel:'Preshading y modulación',project:'Sherman M4A3',author:'Diego Ferrer',tech:'Preshading',thumb:'preshading paneles',time:'hace 9 h',pro:false},
+    {kind:'step',badge:'Nuevo paso',projectId:'diorama',stepIndex:3,stepLabel:'Vegetación y ambientación',project:'Estación abandonada',author:'Lucía Romero',tech:'Pigmentos',thumb:'diorama · vegetación',time:'hace 1 d',pro:true},
+    {kind:'done',projectId:'yamato',stepLabel:'IJN Yamato',project:'IJN Yamato',author:'Kenji Mora',tech:'Aerografía',thumb:'Yamato terminado',time:'hace 1 d',pro:false},
+    {kind:'step',badge:'Nuevo paso',projectId:'figura',stepIndex:2,stepLabel:'Base y modulación de piel',project:'Caballero teutónico',author:'Andrea Gil',tech:'Lavados con óleos',thumb:'figura · piel',time:'hace 2 d',pro:true},
+  ]; }
+
+  get allTechniques(){ return ['Aerografía','Preshading','Lavados con óleos','Dry brushing','Chipping / desconchados','Pigmentos','Filtros','Masking','Imprimación','Barnizado']; }
+
+  renderVals(){
+    const S=this.state, DB=this.DB;
+    const set=(p)=>this.setState(p), top=()=>window.scrollTo({top:0});
+    const goto=(v,extra)=>()=>{ set(Object.assign({view:v},extra||{})); top(); };
+    const openProject=(id)=>()=>{ set({view:'project',projectId:id}); top(); };
+    const openStep=(id,idx)=>()=>{ set({view:'step',projectId:id,stepIndex:idx}); top(); };
+    const openTech=(name)=>()=>{ set({view:'technique',technique:name}); top(); };
+    const setTier=(t)=>()=>set({tier:t});
+    const isFree=S.tier==='free';
+
+    // comment interactions (like + reply)
+    const ciSet=(id,patch)=>this.setState(prev=>({ci:Object.assign({},prev.ci,{[id]:Object.assign({},prev.ci[id],patch)})}));
+    const buildComments=(list,prefix)=>list.map((c,i)=>{
+      const id=prefix+'-'+i, st=S.ci[id]||{}, liked=!!st.liked, replies=st.replies||[];
+      return {
+        id, initials:c.initials||this.initials(c.author), author:c.author, time:c.time, text:c.text,
+        liked, likeCount:(c.likes||0)+(liked?1:0), likeColor:liked?'var(--accent)':'var(--muted)',
+        likeFill:liked?'var(--accent)':'none',
+        onLike:()=>ciSet(id,{liked:!liked}),
+        replyOpen:!!st.replyOpen, onToggleReply:()=>ciSet(id,{replyOpen:!st.replyOpen}),
+        draft:st.draft||'', onDraft:(e)=>ciSet(id,{draft:e.target.value}),
+        onSendReply:()=>{ const d=(st.draft||'').trim(); if(!d) return; this.setState(prev=>{ const p=prev.ci[id]||{}; const rp=p.replies||[]; return {ci:Object.assign({},prev.ci,{[id]:Object.assign({},p,{replies:[...rp,{author:'Marta Vidal',time:'ahora',text:d}],draft:'',replyOpen:true})})}; }); },
+        replies:replies.map(r=>({initials:this.initials(r.author),author:r.author,time:r.time,text:r.text})),
+        hasReplies:replies.length>0,
+      };
+    });
+
+    // header
+    const navItems=[
+      {label:'Feed',onClick:goto('feed'),active:S.view==='feed'},
+      {label:'Técnicas',onClick:()=>{set({view:'technique'});top();},active:S.view==='technique'},
+      {label:'Precios',onClick:goto('pricing'),active:S.view==='pricing'},
+      {label:'Mis proyectos',onClick:goto('creator'),active:S.view==='creator'},
+    ];
+    const tabStyle=(on)=>on
+      ? 'background:var(--surface);color:var(--text);box-shadow:0 1px 2px var(--shadow);border:none;border-radius:6px;padding:5px 11px;font-size:12px;font-weight:600;cursor:pointer'
+      : 'background:none;border:none;border-radius:6px;padding:5px 11px;font-size:12px;font-weight:500;color:var(--muted);cursor:pointer';
+    const tierTabs=[['free','Suscriptor'],['pro','Pro'],['modelista','Modelista']].map(([k,l])=>({label:l,onClick:setTier(k),style:tabStyle(S.tier===k)}));
+    const closeMenu=()=>this.setState({menuOpen:false});
+    const mNav=(on)=> on
+      ? 'text-align:left;background:var(--accent-soft);color:var(--accent);border:none;border-radius:10px;padding:13px 15px;font-size:16px;font-weight:600;cursor:pointer'
+      : 'text-align:left;background:none;color:var(--text);border:none;border-radius:10px;padding:13px 15px;font-size:16px;font-weight:500;cursor:pointer';
+    const mobileNavItems=navItems.map(it=>({label:it.label,active:it.active,style:mNav(it.active),onClick:()=>{ it.onClick(); this.setState({menuOpen:false}); }}));
+    const mTier=(on)=> on
+      ? 'text-align:left;background:var(--accent);color:var(--accent-contrast);border:none;border-radius:9px;padding:11px 14px;font-size:14px;font-weight:600;cursor:pointer'
+      : 'text-align:left;background:var(--surface-2);color:var(--text);border:1px solid var(--border);border-radius:9px;padding:11px 14px;font-size:14px;font-weight:500;cursor:pointer';
+    const tierTabsMobile=[['free','Suscriptor'],['pro','Pro'],['modelista','Modelista']].map(([k,l])=>({label:l,style:mTier(S.tier===k),onClick:()=>{ setTier(k)(); this.setState({menuOpen:false}); }}));
+
+    // feed
+    const toggleFav=(id)=>(e)=>{ if(e&&e.stopPropagation)e.stopPropagation(); this.setState(prev=>({favs:Object.assign({},prev.favs,{[id]:!prev.favs[id]})})); };
+    const isFav=(id)=>!!S.favs[id];
+    const mapFeed=(it)=>({
+      thumb:it.thumb, time:it.time, badge:it.badge, project:it.project, author:it.author, tech:it.tech,
+      initials:this.initials(it.author), stepLabel:it.stepLabel, title:it.stepLabel, projectLine:'en '+it.project,
+      isStep:it.kind==='step', isDone:it.kind==='done',
+      locked:isFree && it.pro,
+      onOpen: it.kind==='done'? openProject(it.projectId) : (isFree&&it.pro? goto('step',{projectId:it.projectId,stepIndex:it.stepIndex}) : openStep(it.projectId,it.stepIndex)),
+      onProject: openProject(it.projectId),
+      isFav:isFav(it.projectId), onFav:toggleFav(it.projectId), favFill:isFav(it.projectId)?'var(--accent)':'none',
+      favBtnStyle:'position:absolute;top:10px;right:10px;z-index:3;width:32px;height:32px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,.2);'+(isFav(it.projectId)
+        ? 'background:var(--surface);color:var(--accent)'
+        : 'background:color-mix(in srgb,#000 42%,transparent);color:#fff'),
+    });
+    let feed=this.feedRaw.map(mapFeed);
+    if(S.feedFilter==='step') feed=feed.filter(f=>f.isStep);
+    if(S.feedFilter==='done') feed=feed.filter(f=>f.isDone);
+    const featured=feed[0]||null;
+    const feedRest=feed.slice(1);
+    const filterTabs=[['all','Todo'],['step','Pasos'],['done','Terminados']].map(([k,l])=>({label:l,onClick:()=>set({feedFilter:k}),style:tabStyle(S.feedFilter===k)}));
+    const trendingTechs=['Aerografía','Chipping / desconchados','Lavados con óleos','Preshading','Pigmentos','Dry brushing'].map(n=>({name:n,onClick:openTech(n)}));
+    const suggestedModelers=[
+      {name:'Kenji Mora',meta:'Naval · 38 builds',initials:'KM'},
+      {name:'Lucía Romero',meta:'Dioramas · 21 builds',initials:'LR'},
+      {name:'Javier Sáez',meta:'Aviación · 47 builds',initials:'JS'},
+    ];
+
+    // project
+    const project=DB[S.projectId];
+    const canEdit=S.tier==='modelista';
+    const openStepEdit=(id,i)=>()=>{ const p=DB[id]; const s=(p.steps[i])||{}; set({view:'stepEdit',projectId:id,stepIndex:i,stepEdFrom:'project',stepEd:{title:s.title||'',duration:s.duration||'',techniques:(s.techniques||[]).slice(),photos:(s.gallery||[]).length||4,body:(s.body&&s.body.join('\n\n'))||''}}); top(); };
+    const newStepEdit=(id)=>()=>{ set({view:'stepEdit',projectId:id,stepIndex:-1,stepEdFrom:'project',stepEd:{title:'',duration:'',techniques:[],photos:0,body:''}}); top(); };
+    const newStepFromCreator=()=>{ set({view:'stepEdit',stepIndex:-1,stepEdFrom:'creator',stepEd:{title:'',duration:'',techniques:[],photos:0,body:''}}); top(); };
+    const proj={
+      title:project.title, subtitle:project.subtitle, cover:project.cover, theme:project.theme, status:project.status,
+      statusColor:this.statusColor(project.status), author:project.author, authorInitials:this.initials(project.author),
+      stepsCount:project.steps.length, commentCount:project.comments.length, comments:buildComments(project.comments,'proj-'+project.id),
+      materials:project.materials,
+      finishedGallery:project.finishedGallery||[], hasFinished:(project.finishedGallery||[]).length>0,
+      onAuthor:goto('profile'),
+      isFav:isFav(project.id), onFav:toggleFav(project.id),
+      favLabel:isFav(project.id)?'Guardado':'Guardar',
+      favFill:isFav(project.id)?'var(--accent)':'none',
+      favBtnStyle:'display:inline-flex;align-items:center;gap:7px;border-radius:999px;padding:8px 15px;font-size:13px;font-weight:600;cursor:pointer;'+(isFav(project.id)
+        ? 'background:var(--accent-soft);color:var(--accent);border:1px solid transparent'
+        : 'background:var(--surface);color:var(--text);border:1px solid var(--border)'),
+      canEdit, onNewStep:newStepEdit(project.id),
+      attrs:[
+        {label:'Escala',value:project.scale},{label:'Temática',value:project.theme},
+        {label:'Fabricante',value:project.maker},{label:'Referencia',value:project.ref},
+        {label:'Dificultad',value:project.difficulty},{label:'Estado',value:project.status},
+      ],
+    };
+    const projectSteps=project.steps.map((s,i)=>({
+      n:String(i+1).padStart(2,'0'), title:s.title, techniques:s.techniques, duration:s.duration||'2 h',
+      locked:isFree && i>=2, canEdit,
+      onEdit:openStepEdit(project.id,i),
+      onOpen: (isFree&&i>=2)? goto('step',{projectId:project.id,stepIndex:i}) : openStep(project.id,i),
+    }));
+    const materialsLocked=isFree;
+    const pdfBtnBg=isFree?'var(--surface)':'var(--accent)';
+    const pdfBtnColor=isFree?'var(--muted)':'var(--accent-contrast)';
+    const onExportPdf=isFree? goto('pricing') : ()=>window.print();
+
+    // step
+    const stepObj=project.steps[S.stepIndex]||project.steps[0];
+    const idx=S.stepIndex;
+    const defaultBody=['Documenta este paso con fotos claras del antes y el después. Anota mezclas, diluciones y tiempos de secado para poder repetir el resultado en el futuro.','Trabaja en capas finas y controla la luz: la cámara perdona menos que el ojo. Cada foto del proceso vale más que un párrafo de explicación.'];
+    const step={
+      n:String(idx+1).padStart(2,'0'),
+      title:stepObj.title,
+      duration:stepObj.duration||'2 h',
+      techniques:(stepObj.techniques||[]).map(t=>({name:t,onClick:openTech(t)})),
+      gallery:stepObj.gallery||['proceso 1','proceso 2','proceso 3','detalle'],
+      body:stepObj.body||defaultBody,
+      tip:stepObj.tip||'Consejo — fotografía siempre con la misma luz para que la progresión del build se lea de un vistazo en la bitácora.',
+      hasPrev:idx>0, hasNext:idx<project.steps.length-1,
+      onPrev:idx>0?openStep(project.id,idx-1):null, onNext:idx<project.steps.length-1?openStep(project.id,idx+1):null,
+      prevTitle:idx>0?project.steps[idx-1].title:'', nextTitle:idx<project.steps.length-1?project.steps[idx+1].title:'',
+      onProject:openProject(project.id),
+      canEdit, onEdit:openStepEdit(project.id,idx),
+    };
+    const stepLocked=isFree && idx>=2;
+    const teaserPerks=['Todos los pasos de cada bitácora','Descarga en PDF y materiales','Funciones sociales completas'];
+    const stepCommentsRaw=[
+      {author:'Diego Ferrer',time:'hace 5 h',likes:9,text:'La esponja marca la diferencia frente al pincel suelto. Gran resultado.',initials:'DF'},
+      {author:'Andrea Gil',time:'hace 2 h',likes:3,text:'Apuntado el truco del blanco titanio en el borde. Gracias!',initials:'AG'},
+    ];
+    const stepComments=buildComments(stepCommentsRaw,'step-'+project.id+'-'+idx);
+
+    // technique archive
+    const techDescs={
+      'Aerografía':'La base de casi todo acabado moderno: capas finas y control de presión para modulaciones y transiciones suaves de color.',
+      'Chipping / desconchados':'Simula el desgaste de la pintura y el metal expuesto. Con esponja, pincel o fluido pelable, siempre con contención.',
+      'Lavados con óleos':'Óleos muy diluidos que se acumulan en recovecos y remarcan el relieve, aportando profundidad y suciedad creíble.',
+      'Preshading':'Sombreado previo bajo la capa base para fijar el volumen y marcar paneles antes del color.',
+      'Pigmentos':'Polvos para barro, polvo y hollín; el paso que ancla la maqueta a un entorno concreto.',
+      'Dry brushing':'Pincel casi seco sobre relieves para resaltar aristas y texturas de forma rápida.',
+      'Filtros':'Veladuras muy diluidas que unifican tonos y aportan variación cromática sutil.',
+      'Masking':'Enmascarado para camuflajes nítidos y separación limpia de colores.',
+      'Imprimación':'Capa de agarre y unificación previa; base para preshading y modulación.',
+      'Barnizado':'Sellados brillo/mate que protegen y preparan cada fase del envejecido.',
+    };
+    const techniqueDesc=techDescs[S.technique]||'Página de descubrimiento: proyectos y pasos que utilizan esta técnica.';
+    const techniqueSwitcher=this.allTechniques.map(n=>({name:n,onClick:openTech(n),
+      style: n===S.technique
+        ? 'background:var(--accent);color:var(--accent-contrast);border:none;padding:7px 14px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer'
+        : 'background:var(--surface);border:1px solid var(--border);color:var(--text);padding:7px 14px;border-radius:999px;font-size:13px;cursor:pointer'}));
+    const techniqueGrid=[
+      {title:'Panther Ausf. G',kind:'Paso 6',meta:'Marta Vidal · Blindados',thumb:'glacis · chipping',onOpen:openStep('panther',5)},
+      {title:'Sherman M4A3',kind:'Paso 4',meta:'Diego Ferrer · Blindados',thumb:'lavados casco',onOpen:openProject('sherman')},
+      {title:'IJN Yamato',kind:'Proyecto',meta:'Kenji Mora · Naval',thumb:'cubierta · óleos',onOpen:openProject('yamato')},
+      {title:'Spitfire Mk.IX',kind:'Proyecto',meta:'Javier Sáez · Aviación',thumb:'fuselaje · panel',onOpen:openProject('spitfire')},
+      {title:'Estación abandonada',kind:'Paso 3',meta:'Lucía Romero · Dioramas',thumb:'muro · desgaste',onOpen:openProject('diorama')},
+      {title:'Caballero teutónico',kind:'Proyecto',meta:'Andrea Gil · Figuras',thumb:'armadura · metal',onOpen:openProject('figura')},
+    ];
+
+    // pricing
+    const cardBase='position:relative;background:var(--surface);border:2px solid var(--border);border-radius:8px;padding:28px 24px;box-shadow:0 1px 2px var(--shadow)';
+    const cardFeat='position:relative;background:var(--surface);border:2px solid var(--primary);border-radius:8px;padding:32px 24px;box-shadow:var(--bp-shadow)';
+    const btnPrimary='width:100%;background:var(--accent);color:var(--accent-contrast);border:none;border-radius:6px;padding:13px;font-family:var(--font-display);font-size:14px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;cursor:pointer';
+    const btnGhost='width:100%;background:none;border:2px solid var(--border);color:var(--text);border-radius:6px;padding:12px;font-family:var(--font-display);font-size:14px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;cursor:pointer';
+    const pricing=[
+      {name:'Suscriptor',blurb:'Explora la comunidad y sigue los builds que te inspiran.',price:'Gratis',per:'',featured:false,cta:S.tier==='free'?'Tu plan actual':'Empezar gratis',onSelect:setTier('free'),cardStyle:cardBase,btnStyle:btnGhost,
+        features:['Feed de progreso completo','Ver proyectos y primeros pasos','Comentar y guardar favoritos','Perfil público básico']},
+      {name:'Pro',blurb:'Accede a todo el paso a paso y llévatelo contigo.',price:'6 €',per:'/mes',featured:true,cta:S.tier==='pro'?'Tu plan actual':'Hazte Pro',onSelect:setTier('pro'),cardStyle:cardFeat,btnStyle:btnPrimary,
+        features:['Todo lo de Suscriptor','Acceso a todos los pasos','Descarga de bitácoras en PDF','Materiales y plantillas descargables','Funciones sociales completas']},
+      {name:'Modelista',blurb:'Publica tus propias bitácoras y construye tu portafolio.',price:'12 €',per:'/mes',featured:false,cta:S.tier==='modelista'?'Tu plan actual':'Ser Modelista',onSelect:setTier('modelista'),cardStyle:cardBase,btnStyle:btnGhost,
+        features:['Todo lo de Pro','Crea tus propias bitácoras','Editor de pasos y materiales','Portafolio destacado','Estadísticas de tus builds']},
+    ];
+
+    // creator
+    const creatorLocked=S.tier!=='modelista';
+    const creatorStats=[{value:'4',label:'Bitácoras'},{value:'2',label:'En progreso'},{value:'31',label:'Pasos'},{value:'1.2k',label:'Favoritos'}];
+    const myProjects=[
+      {title:'Panther Ausf. G',meta:'1/35 · Blindados · 8 pasos',status:'WIP',statusColor:this.statusColor('WIP'),thumb:'Panther 3/4',onOpen:openProject('panther')},
+      {title:'Tiger I · temprano',meta:'1/35 · Blindados · 6 pasos',status:'WIP',statusColor:this.statusColor('WIP'),thumb:'Tiger I',onOpen:openProject('panther')},
+      {title:'Kübelwagen Typ 82',meta:'1/35 · Blindados · 5 pasos',status:'Terminado',statusColor:this.statusColor('Terminado'),thumb:'Kübelwagen',onOpen:openProject('panther')},
+      {title:'Diorama: puesto avanzado',meta:'1/35 · Dioramas · 9 pasos',status:'Terminado',statusColor:this.statusColor('Terminado'),thumb:'puesto avanzado',onOpen:openProject('diorama')},
+    ];
+    // editor viewmodel
+    const ed=S.editor;
+    const setEd=(patch)=>set({editor:Object.assign({},S.editor,patch)});
+    const chipOn='background:var(--accent);color:var(--accent-contrast);border:none;padding:7px 13px;border-radius:999px;font-size:12.5px;font-weight:600;cursor:pointer';
+    const chipOff='background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:7px 13px;border-radius:999px;font-size:12.5px;cursor:pointer';
+    const navBtn='width:28px;height:28px;flex:none;border-radius:7px;border:1px solid var(--border);background:none;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center';
+    const navBtnOff='width:28px;height:28px;flex:none;border-radius:7px;border:1px solid var(--border);background:none;color:var(--faint);opacity:.4;cursor:default;display:flex;align-items:center;justify-content:center';
+    const editor={
+      title:ed.title, scale:ed.scale, maker:ed.maker, ref:ed.ref, theme:ed.theme, difficulty:ed.difficulty,
+      onTitle:(e)=>setEd({title:e.target.value}), onScale:(e)=>setEd({scale:e.target.value}),
+      onMaker:(e)=>setEd({maker:e.target.value}), onRef:(e)=>setEd({ref:e.target.value}),
+      onTheme:(e)=>setEd({theme:e.target.value}), onDifficulty:(e)=>setEd({difficulty:e.target.value}),
+      techniqueChips:this.allTechniques.map(t=>({name:t,onToggle:()=>setEd({techniques: ed.techniques.includes(t)? ed.techniques.filter(x=>x!==t):[...ed.techniques,t]}),style: ed.techniques.includes(t)?chipOn:chipOff})),
+      stepRows:ed.steps.map((s,i)=>({
+        n:String(i+1).padStart(2,'0'), title:s.title,
+        onTitle:(e)=>{const a=ed.steps.slice();a[i]=Object.assign({},a[i],{title:e.target.value});setEd({steps:a});},
+        onUp:i>0?()=>{const a=ed.steps.slice();[a[i-1],a[i]]=[a[i],a[i-1]];setEd({steps:a});}:null,
+        onDown:i<ed.steps.length-1?()=>{const a=ed.steps.slice();[a[i+1],a[i]]=[a[i],a[i+1]];setEd({steps:a});}:null,
+        onRemove:()=>setEd({steps:ed.steps.filter((_,j)=>j!==i)}),
+        upStyle:i>0?navBtn:navBtnOff, downStyle:i<ed.steps.length-1?navBtn:navBtnOff,
+      })),
+      onAddStep:newStepFromCreator,
+    };
+
+    // STEP EDITOR viewmodel
+    const se=S.stepEd||{title:'',duration:'',techniques:[],photos:0,body:''};
+    const setSe=(patch)=>set({stepEd:Object.assign({},S.stepEd,patch)});
+    const backFromStepEdit=()=>{ if(S.stepEdFrom==='creator'){ set({view:'creator'}); } else { openProject(project.id)(); return; } top(); };
+    const stepEditor={
+      isNew:S.stepIndex<0,
+      heading:S.stepIndex<0?'Nuevo paso':('Editar paso '+String(S.stepIndex+1).padStart(2,'0')),
+      projectTitle:S.stepEdFrom==='creator'?(S.editor.title||'Nueva bitácora'):project.title,
+      title:se.title, duration:se.duration, body:se.body,
+      onTitle:(e)=>setSe({title:e.target.value}),
+      onDuration:(e)=>setSe({duration:e.target.value}),
+      onBody:(e)=>setSe({body:e.target.value}),
+      durationPresets:['1 h','1 h 30 min','2 h','3 h','4 h+'].map(d=>({label:d,onClick:()=>setSe({duration:d}),
+        style: se.duration===d
+          ? 'background:var(--accent);color:var(--accent-contrast);border:none;padding:6px 12px;border-radius:8px;font-family:var(--font-mono);font-size:12px;cursor:pointer'
+          : 'background:var(--surface-2);border:1px solid var(--border);color:var(--muted);padding:6px 12px;border-radius:8px;font-family:var(--font-mono);font-size:12px;cursor:pointer'})),
+      photoSlots:Array.from({length:Math.max(se.photos,0)}).map((_,i)=>({i})),
+      onAddPhoto:()=>setSe({photos:(se.photos||0)+1}),
+      onRemovePhoto:()=>setSe({photos:Math.max((se.photos||0)-1,0)}),
+      techniqueChips:this.allTechniques.map(t=>({name:t,onToggle:()=>setSe({techniques: se.techniques.includes(t)? se.techniques.filter(x=>x!==t):[...se.techniques,t]}),style: se.techniques.includes(t)?chipOn:chipOff})),
+      onSave:backFromStepEdit,
+      onCancel:backFromStepEdit,
+      onBackProject:backFromStepEdit,
+    };
+
+    // profile
+    const profile={
+      name:'Marta Vidal', handle:'@martavidal', location:'Valencia, ES', joined:'2021', initials:'MV',
+      bio:'Blindados de la II Guerra Mundial y algún que otro diorama. Óleos, pigmentos y mucha paciencia en el banco de trabajo.',
+      socials:[
+        {net:'Instagram',handle:'@marta.builds',url:'#',icon:'<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor" stroke="none"/>'},
+        {net:'YouTube',handle:'Marta Vidal Models',url:'#',icon:'<rect x="2.5" y="5.5" width="19" height="13" rx="4"/><path d="M10 9.2l5 2.8-5 2.8z" fill="currentColor" stroke="none"/>'},
+        {net:'Web',handle:'martavidal.build',url:'#',icon:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 2.5 15 0 18M12 3c-2.5 2.5-2.5 15 0 18"/>'},
+      ],
+      stats:[{value:'12',label:'builds'},{value:'148',label:'pasos'},{value:'2.3k',label:'seguidores'}],
+      builds:[
+        {title:'Panther Ausf. G',meta:'1/35 · WIP',status:'WIP',statusColor:this.statusColor('WIP'),thumb:'Panther 3/4',onOpen:openProject('panther')},
+        {title:'Tiger I temprano',meta:'1/35 · Terminado',status:'Terminado',statusColor:this.statusColor('Terminado'),thumb:'Tiger I',onOpen:openProject('panther')},
+        {title:'StuG III Ausf. G',meta:'1/35 · Terminado',status:'Terminado',statusColor:this.statusColor('Terminado'),thumb:'StuG III',onOpen:openProject('panther')},
+        {title:'Kübelwagen Typ 82',meta:'1/35 · Terminado',status:'Terminado',statusColor:this.statusColor('Terminado'),thumb:'Kübelwagen',onOpen:openProject('panther')},
+        {title:'Diorama: puesto avanzado',meta:'1/35 · Terminado',status:'Terminado',statusColor:this.statusColor('Terminado'),thumb:'puesto avanzado',onOpen:openProject('diorama')},
+        {title:'Marder III',meta:'1/35 · WIP',status:'WIP',statusColor:this.statusColor('WIP'),thumb:'Marder III',onOpen:openProject('panther')},
+      ],
+      activity:[
+        {icon:'✎',text:'Publicó el Paso 6 · Chipping del casco en Panther Ausf. G',time:'hace 3 h'},
+        {icon:'★',text:'Guardó en favoritos IJN Yamato de Kenji Mora',time:'hace 1 d'},
+        {icon:'✎',text:'Publicó el Paso 5 · Calcas y barniz en Panther Ausf. G',time:'hace 3 d'},
+        {icon:'✓',text:'Terminó el build StuG III Ausf. G',time:'hace 1 sem'},
+        {icon:'✎',text:'Comentó en Estación abandonada de Lucía Romero',time:'hace 1 sem'},
+      ],
+    };
+    const profTabStyle=(on)=>on
+      ? 'background:none;border:none;border-bottom:2px solid var(--accent);color:var(--text);padding:11px 14px;margin-bottom:-1px;font-size:14px;font-weight:600;cursor:pointer'
+      : 'background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);padding:11px 14px;margin-bottom:-1px;font-size:14px;font-weight:500;cursor:pointer';
+    const favIds=Object.keys(S.favs).filter(id=>S.favs[id]&&DB[id]);
+    const favBuilds=favIds.map(id=>{ const p=DB[id]; return {title:p.title,meta:p.scale+' · '+p.theme,status:p.status,statusColor:this.statusColor(p.status),thumb:p.cover,onOpen:openProject(id)}; });
+    const profileTabs=[['builds','Builds'],['activity','Actividad'],['favorites','Favoritos']].map(([k,l])=>({label: k==='favorites'?(l+' ('+favIds.length+')'):l,onClick:()=>set({profileTab:k}),style:profTabStyle(S.profileTab===k)}));
+    const profileVM=Object.assign({},profile,{socials:profile.socials.map(so=>Object.assign({},so,{
+      iconEl:React.createElement('svg',{width:15,height:15,viewBox:'0 0 24 24',fill:'none',stroke:'currentColor',strokeWidth:1.9,strokeLinecap:'round',strokeLinejoin:'round',style:{flex:'none'},dangerouslySetInnerHTML:{__html:so.icon}})
+    }))});
+
+    return {
+      rootStyle:this.themeVars(S.theme),
+      themeIsDark:S.theme==='dark', themeIsLight:S.theme!=='dark', toggleTheme:()=>set({theme:S.theme==='dark'?'light':'dark'}),
+      goFeed:goto('feed'), goPricing:goto('pricing'), goProfileMe:goto('profile'),
+      navItems, tierTabs,
+      isNarrow:S.isNarrow, isWide:!S.isNarrow, drawerOpen:S.isNarrow&&S.menuOpen,
+      toggleMenu:()=>this.setState({menuOpen:!S.menuOpen}), closeMenu, stopMenu:(e)=>e.stopPropagation(),
+      mobileNavItems, tierTabsMobile, mobileProfile:()=>{ this.setState({view:'profile',menuOpen:false}); window.scrollTo({top:0}); },
+      isFeed:S.view==='feed', isProject:S.view==='project', isStep:S.view==='step', isTechnique:S.view==='technique', isPricing:S.view==='pricing', isCreator:S.view==='creator', isProfile:S.view==='profile', isStepEdit:S.view==='stepEdit',
+      stepEditor,
+      // feed
+      featured, hasFeatured:!!featured, feedRest, filterTabs, trendingTechs, suggestedModelers,
+      // project
+      project:proj, projectSteps, materialsLocked, pdfBtnBg, pdfBtnColor, onExportPdf,
+      accAutor:S.acc.autor, accMateriales:S.acc.materiales,
+      accAutorChevron:S.acc.autor?'rotate(180deg)':'rotate(0deg)', accMaterialesChevron:S.acc.materiales?'rotate(180deg)':'rotate(0deg)',
+      toggleAutor:()=>this.setState({acc:Object.assign({},S.acc,{autor:!S.acc.autor})}),
+      toggleMateriales:()=>this.setState({acc:Object.assign({},S.acc,{materiales:!S.acc.materiales})}),
+      // step
+      step, stepLocked, stepUnlocked:!stepLocked, teaserPerks, stepComments, setTierPro:setTier('pro'),
+      // technique
+      technique:S.technique, techniqueDesc, techniqueSwitcher, techniqueGrid,
+      // pricing
+      pricing,
+      // creator
+      creatorLocked, creatorUnlocked:!creatorLocked, creatorStats, myProjects,
+      editorOpen:S.editorOpen, toggleEditor:()=>set({editorOpen:!S.editorOpen}), editorToggleLabel:S.editorOpen?'Cerrar editor':'Nuevo proyecto',
+      editor, themeOptions:['Blindados','Aviación','Naval','Figuras','Dioramas'], difficultyOptions:['Principiante','Intermedio','Avanzado','Experto'],
+      setTierModelista:setTier('modelista'),
+      // profile
+      profile:profileVM, profileTabs, favBuilds, hasFavs:favBuilds.length>0, noFavs:favBuilds.length===0,
+      profileShowBuilds:S.profileTab==='builds', profileShowActivity:S.profileTab==='activity', profileShowFavorites:S.profileTab==='favorites',
+    };
+  }
+}
+</script>
+</body>
+</html>
