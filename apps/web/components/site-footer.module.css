@@ -20,7 +20,11 @@
   letter-spacing: 0.01em;
 }
 
-.dot {
+.aula {
+  color: var(--wordmark-aula);
+}
+
+.escala {
   color: var(--accent);
 }
 

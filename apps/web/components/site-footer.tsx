@@ -5,7 +5,8 @@ export function SiteFooter() {
     <footer className={styles.footer}>
       <div className={`page ${styles.inner}`}>
         <span className={styles.wordmark}>
-          Aulaescala<span className={styles.dot}>.</span>
+          <span className={styles.aula}>Aula</span>
+          <span className={styles.escala}>escala.</span>
         </span>
         <p className={styles.tagline}>
           Bitácoras de modelismo estático · maquetas, dioramas y figuras

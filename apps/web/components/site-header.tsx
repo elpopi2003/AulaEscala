@@ -64,7 +64,8 @@ export function SiteHeader({ initials, displayName, canAuthor }: SiteHeaderProps
             1/35
           </span>
           <span className={styles.wordmark}>
-            Aulaescala<span className={styles.dot}>.</span>
+            <span className={styles.aula}>Aula</span>
+            <span className={styles.escala}>escala.</span>
           </span>
         </Link>
 
@@ -123,7 +124,8 @@ export function SiteHeader({ initials, displayName, canAuthor }: SiteHeaderProps
           <aside className={styles.drawer} aria-label="Menú">
             <div className={styles.drawerHead}>
               <span className={styles.wordmark}>
-                Aulaescala<span className={styles.dot}>.</span>
+                <span className={styles.aula}>Aula</span>
+                <span className={styles.escala}>escala.</span>
               </span>
               <button
                 ref={closeButtonRef}

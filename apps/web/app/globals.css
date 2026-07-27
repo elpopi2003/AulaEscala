@@ -43,6 +43,10 @@
 
   --shadow: hsl(213 31% 15% / 0.09);
 
+  /* Wordmark a dos tonos: AULA estructural, ESCALA en acento.
+     En claro, AULA toma el azul navy. */
+  --wordmark-aula: var(--primary);
+
   /* Derivados */
   --accent-soft: color-mix(in srgb, var(--accent) 14%, var(--bg));
   --primary-soft: color-mix(in srgb, var(--primary) 12%, var(--bg));
@@ -126,6 +130,11 @@
   --pb: hsl(213 31% 14%);
 
   --shadow: rgb(0 0 0 / 0.5);
+
+  /* En oscuro, AULA va en blanco. Se usa --text (95% de luminosidad) en lugar
+     de #fff puro: es el blanco del sistema, y el blanco absoluto seria el unico
+     de toda la interfaz — destacaria por accidente, no por diseno. */
+  --wordmark-aula: var(--text);
 }
 
 /* --------------------------------------------------------------------------

@@ -132,11 +132,15 @@
   font-size: var(--text-xs);
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--primary);
   margin-bottom: var(--space-1);
 }
 
+/* Los navegadores dan a <dd> un `margin-inline-start: 40px` por defecto, que
+   empujaba cada valor 40px a la derecha de su etiqueta. Se anula para que
+   etiqueta y valor compartan el mismo borde izquierdo. */
 .attrValue {
+  margin: 0;
   font-weight: 600;
 }
 
@@ -237,7 +241,7 @@
   font-family: var(--font-display);
   font-weight: 800;
   font-size: var(--text-lg);
-  color: var(--faint);
+  color: var(--primary);
   font-variant-numeric: tabular-nums;
 }
 
@@ -262,6 +266,17 @@
   font-weight: 600;
   font-size: var(--text-base);
   line-height: 1.35;
+}
+
+/* El titular de una fila hereda el color del contenido, no el azul de enlace
+   de `a {}`. En claro la diferencia se disimulaba porque --primary es navy; en
+   oscuro pasa a azul claro y la lista entera se lee como enlaces. */
+.stepTitle a {
+  color: inherit;
+}
+
+.step:hover .stepTitle a {
+  color: var(--primary);
 }
 
 .stepLink::after {
@@ -381,6 +396,11 @@
 
 .authorName {
   font-weight: 600;
+  color: var(--text);
+}
+
+.authorName:hover {
+  color: var(--accent);
 }
 
 .authorMeta {

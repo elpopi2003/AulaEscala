@@ -63,7 +63,13 @@
   line-height: 1;
 }
 
-.dot {
+/* Wordmark a dos tonos. AULA estructural (navy en claro, blanco en oscuro),
+   ESCALA en el naranja de acento, punto incluido. */
+.aula {
+  color: var(--wordmark-aula);
+}
+
+.escala {
   color: var(--accent);
 }
 
