@@ -47,3 +47,19 @@ enable_confirmations = true
 
 [analytics]
 enabled = false
+
+# ── Edge Functions ──────────────────────────────────────────────────────────
+# Stripe no manda un JWT de Supabase: lo que autentica al webhook es la firma
+# `stripe-signature`, que la propia funcion verifica con constructEventAsync.
+# Con verify_jwt = true (el valor por defecto) el gateway rechazaria todas las
+# entregas antes de llegar al codigo.
+[functions.stripe-webhook]
+verify_jwt = false
+
+# Estas dos SI exigen JWT: identifican al usuario que compra o gestiona su
+# suscripcion, y de ese user_id sale el customer de Stripe.
+[functions.stripe-checkout]
+verify_jwt = true
+
+[functions.stripe-portal]
+verify_jwt = true

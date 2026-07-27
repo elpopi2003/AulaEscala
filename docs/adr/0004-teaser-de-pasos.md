@@ -1,7 +1,7 @@
 # ADR 0004 — Cuántos pasos son gratis
 
-**Estado:** aceptado provisionalmente · ⚠️ **pendiente de confirmación de producto**
-**Fecha:** 2026-07-26
+**Estado:** ✅ **resuelto — los dos primeros pasos son gratis**
+**Fecha:** 2026-07-26 · resuelto 2026-07-27
 
 ## Contexto
 
@@ -65,14 +65,31 @@ Un muro de pago se falla cerrado.
 - Con `free_preview_steps > 0` el cuerpo de los primeros pasos pasa a ser **público e
   indexable**. Eso es deseable para SEO, pero conviene decidirlo a sabiendas.
 
-## Pendiente
+## Resolución
 
-Confirmar con producto. Si se elige el comportamiento del diseño:
+Producto confirma el **comportamiento del diseño**: los dos primeros pasos abiertos.
+Aplicado en `20260727090000_teaser_dos_pasos.sql`.
 
-```sql
-update public.app_config set free_preview_steps = 2;
-```
+El test de no-fuga se reescribió en consecuencia. El cambio importante no es el
+número, sino **qué afirma el test**: ya no comprueba "cero cuerpos", sino que la
+frontera cae exactamente entre el paso 2 y el 3. Cada cuerpo de prueba lleva una
+palabra única (`TEASERALFA`, `MUROGAMMA`...) para poder afirmar por cuál entra —y por
+cuál no— cada vía de acceso.
 
-...y actualizar la expectativa en `00_no_leak.sql`. Si se elige el de la
-especificación, hay que **corregir la copia de la página de precios**, que hoy promete
-"primeros pasos" y no los daría.
+Verificado contra Postgres real: anónimo y suscriptor obtienen 2 cuerpos, `false` en
+`can_view_step_body()` de los pasos 3 y 4, **0** resultados al buscar una palabra que
+solo existe en un cuerpo de pago, y **0** materiales — que no tienen excepción de
+teaser.
+
+## Consecuencias de haber elegido 2
+
+- **El cuerpo de los pasos 1 y 2 es público e indexable por Google.** Es lo que se
+  busca —contenido real posicionando, no solo títulos— pero cambia cómo hay que
+  escribirlos: son escaparate. Merece la pena que los dos primeros pasos de cada
+  bitácora sean los más demostrativos de la calidad del autor.
+- La copia de la página de precios ("ver proyectos y primeros pasos") **es correcta**
+  tal cual está en el prototipo. No hay que tocarla.
+- `activity.snapshot.is_paywalled` se calcula con el mismo valor, así que la tarjeta
+  del feed pinta el candado solo del paso 3 en adelante.
+- Volver atrás es un `update public.app_config set free_preview_steps = 0;` — pero
+  entonces hay que corregir la página de precios y revisar el test.

@@ -17,7 +17,7 @@ Este fichero es el **estado vivo**: qué hay construido, qué se decidió y qué
 | Políticas RLS por tramo (§5) | **Hecho** — co-locadas con cada tabla |
 | Test de no-fuga (§13) | **Hecho** — `/supabase/tests`, bloquea el merge en CI |
 | Storage: buckets y políticas | **Hecho** |
-| Auth + Stripe (§12.3) | Pendiente |
+| Stripe: webhook, Checkout y Portal (§12.3) | **Hecho** — `/supabase/functions`, ver [docs/stripe.md](docs/stripe.md). Falta crear productos y endpoint en el panel de Stripe |
 | Scaffolding Next.js (§12.4) | Pendiente |
 | Pantallas núcleo (§12.5) | Pendiente |
 
@@ -86,13 +86,12 @@ entera y volver a conceder la allowlist.
 | Marca en la UI | **AULAESCALA.** (punto en `--accent`) | [ADR 0001](docs/adr/0001-marca.md) |
 | Rutas i18n | **Prefijo `/es/` desde el día uno** | [ADR 0002](docs/adr/0002-rutas-i18n.md) |
 | Resolución de tramo | `public.user_tier()`, no `auth.user_tier()` | [ADR 0003](docs/adr/0003-tramo-en-esquema-public.md) |
-| Teaser de pasos gratis | `app_config.free_preview_steps = 0` (fallar cerrado) | [ADR 0004](docs/adr/0004-teaser-de-pasos.md) ⚠️ **pendiente de confirmar** |
+| Teaser de pasos gratis | **Los 2 primeros pasos abiertos** (`free_preview_steps = 2`) | [ADR 0004](docs/adr/0004-teaser-de-pasos.md) |
 | Publicación | Directa, sin cola de revisión (§7.1) | spec §7 |
 | Downgrade | El contenido sigue visible; se pierde crear/editar | implementado en las políticas |
 
 ### Abiertas
 
-- [ ] **Confirmar `free_preview_steps`** — el prototipo de diseño abre los 2 primeros pasos y la página de precios promete "primeros pasos"; la spec §4 no abre ninguno. Ver ADR 0004.
 - [ ] **Motor de PDF:** cliente (`@react-pdf/renderer`) vs. serverless headless.
 - [ ] **Precio de Pro y Modelista** — el diseño usa 6 €/mes y 12 €/mes.
 - [ ] **IVA UE/OSS** — Stripe Tax lo cubre. Confirmar con asesoría fiscal.

@@ -27,8 +27,11 @@ Por eso toda política que autoriza a Pro autoriza también a Modelista, sin esc
 | Ver cuerpo de pasos, PDF, materiales | ✗ | ✗ | ✓ | ✓ |
 | Crear/editar proyectos, pasos, técnicas, materiales | ✗ | ✗ | ✗ | ✓ |
 
-> **Excepción configurable:** `app_config.free_preview_steps` abre el cuerpo de los
-> primeros N pasos a todo el mundo. Hoy vale **0**. Ver [ADR 0004](adr/0004-teaser-de-pasos.md).
+> **Excepción del teaser:** `app_config.free_preview_steps` vale **2**, así que el
+> cuerpo de los **dos primeros pasos** de cada bitácora está abierto a todo el mundo,
+> anónimos incluidos — y por tanto es indexable. Del tercero en adelante exige Pro.
+> Los **materiales no tienen esta excepción**: son de pago sin matices.
+> Ver [ADR 0004](adr/0004-teaser-de-pasos.md).
 
 ---
 
