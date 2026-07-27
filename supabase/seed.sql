@@ -6,6 +6,11 @@
 -- proyectos y pasos de prueba viven en los tests, que hacen rollback.
 --
 -- Idempotente: `on conflict do nothing` en todo.
+--
+-- OJO: `supabase db reset` solo actua en LOCAL. En el proyecto remoto este
+-- fichero no se ejecuta solo, y sin escalas ni tematicas no se puede dar de
+-- alta una bitacora. Ya esta aplicado a mano en yyigaxclclxanlovxarh; si se
+-- anaden entradas nuevas hay que aplicarlas alli tambien.
 -- ============================================================================
 
 -- ── Escalas ─────────────────────────────────────────────────────────────────

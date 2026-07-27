@@ -8,7 +8,7 @@
 // El customer se resuelve SIEMPRE desde el user_id del JWT. Aceptar un
 // customer_id de la petición dejaría a cualquiera abrir la facturación de otro.
 // ============================================================================
-import { adminClient, corsHeaders, json, requireEnv, stripe, userFromRequest } from '../_shared/stripe.ts'
+import { adminClient, corsHeaders, json, SITE_URL, stripe, userFromRequest } from '../_shared/stripe.ts'
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
@@ -31,7 +31,7 @@ Deno.serve(async (req) => {
   try {
     const session = await stripe.billingPortal.sessions.create({
       customer: data.stripe_customer_id,
-      return_url: `${requireEnv('SITE_URL')}/es/cuenta`,
+      return_url: `${SITE_URL}/es/cuenta`,
       locale: 'es',
     })
     return json({ url: session.url })

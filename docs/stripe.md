@@ -75,6 +75,9 @@ deja de funcionar. Sin él, un impago mantiene el acceso Pro indefinidamente.
 
 ## Despliegue
 
+Las tres están **desplegadas y verificadas** en `yyigaxclclxanlovxarh` (v2), con
+`verify_jwt` correcto en cada una. Para redesplegar desde una máquina con el CLI:
+
 ```bash
 supabase functions deploy stripe-webhook --no-verify-jwt
 ```
@@ -82,6 +85,35 @@ supabase functions deploy stripe-webhook --no-verify-jwt
 ```bash
 supabase functions deploy stripe-checkout stripe-portal
 ```
+
+### Todas las variables se exigen AL ARRANCAR
+
+`_shared/stripe.ts` resuelve las cinco con `requireEnv` en el momento de cargar el
+módulo, no dentro de los handlers. Si falta una, las tres funciones dejan de
+responder — un fallo imposible de pasar por alto.
+
+Antes no era así con los price y con `SITE_URL`, y el modo de fallo era el peor
+posible para un producto de pago: `tierForPrice()` no encontraba el price, caía a
+`subscriber`, el webhook devolvía 200 y Stripe lo daba por bueno. **El cliente pagaba
+y no recibía el tramo, sin que saltara ninguna alarma.**
+
+Además, si algún día llega un price que la app no sabe traducir —un plan nuevo creado
+en el panel sin actualizar el entorno—, `tierForSubscription()` sigue degradando a
+`subscriber` (lo seguro) pero deja un `console.error` bien visible en los logs.
+
+### Cómo comprobar que arranca
+
+Un POST sin firma tiene que devolver **400**, no 500:
+
+```bash
+curl -i -X POST https://yyigaxclclxanlovxarh.supabase.co/functions/v1/stripe-webhook -d '{}'
+```
+
+- `400 Falta la cabecera stripe-signature` → el módulo cargó: las cinco variables están.
+- `500` → falta alguna. El log de la función dice cuál.
+
+Y con una firma inventada tiene que responder `400 Firma invalida`. Si respondiera 200,
+la verificación de firma no está funcionando y cualquiera podría regalarse Modelista.
 
 ## Cómo degrada un tramo
 
@@ -122,6 +154,11 @@ stripe trigger customer.subscription.created
 
 ## Pendiente
 
+- [ ] **Dar de alta el endpoint del webhook en el panel de Stripe** con los seis
+      eventos de arriba. Mientras `stripe_events` siga a 0 filas, Stripe no está
+      llamando: es el indicador de que falta este paso.
+- [ ] **Prueba de punta a punta**: un pago real en modo test que acabe con la fila
+      correcta en `subscriptions`.
 - [ ] **Confirmar precios** con producto (el diseño usa 6 € y 12 €).
 - [ ] **IVA UE/OSS** — `automatic_tax` está activado en Checkout y la dirección de
       facturación es obligatoria, pero hay que **activar Stripe Tax en el panel** y

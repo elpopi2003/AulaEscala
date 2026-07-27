@@ -8,7 +8,7 @@
 // El tramo no se escribe aquí: lo escribe el webhook cuando Stripe confirma el
 // cobro (§5, §12.3). Volver de Checkout con éxito no es prueba de pago.
 // ============================================================================
-import { adminClient, corsHeaders, json, requireEnv, stripe, userFromRequest } from '../_shared/stripe.ts'
+import { adminClient, corsHeaders, json, requireEnv, SITE_URL, stripe, userFromRequest } from '../_shared/stripe.ts'
 
 const PLANES = {
   pro:       { env: 'STRIPE_PRICE_PRO',       etiqueta: 'Pro' },
@@ -36,7 +36,6 @@ Deno.serve(async (req) => {
   }
 
   const priceId = requireEnv(PLANES[plan].env)
-  const siteUrl = requireEnv('SITE_URL')
 
   const admin = adminClient()
 
@@ -88,8 +87,8 @@ Deno.serve(async (req) => {
       allow_promotion_codes: true,
       locale: 'es',
 
-      success_url: `${siteUrl}/es/cuenta?checkout=ok&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${siteUrl}/es/precios?checkout=cancelado`,
+      success_url: `${SITE_URL}/es/cuenta?checkout=ok&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${SITE_URL}/es/precios?checkout=cancelado`,
     })
 
     return json({ url: session.url })
