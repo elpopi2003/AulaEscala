@@ -125,11 +125,13 @@ export default async function StepPage({
           <IconArrowLeft size={15} />
           {project.title}
         </Link>
-        <span className={styles.counter}>
-          Paso {step.position} de {total}
-        </span>
       </div>
 
+      {/* Encabeza el titulo, igual que el numero en la lista de pasos: la misma
+          jerarquia en las dos pantallas donde aparece un paso. */}
+      <p className={styles.counter}>
+        Paso {step.position} de {total}
+      </p>
       <h1 className={styles.title}>{step.title}</h1>
 
       <div className={styles.meta}>
