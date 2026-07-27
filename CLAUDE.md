@@ -23,13 +23,26 @@ Este fichero es el **estado vivo**: qué hay construido, qué se decidió y qué
 | Scaffolding Next.js (§12.4) | **Hecho** — App Router con `/[locale]`, clientes Supabase, tokens Blueprint/Industrial, tema claro/oscuro |
 | Pantallas núcleo (§12.5) | **Las 3 que definen el producto**: feed → proyecto → paso con muro. Faltan técnica, búsqueda, precios, panel del creador y perfil |
 
-### Aviso de entorno
+### Si la tipografía se ve mal en local
 
 `next/font/google` **descarga las fuentes en tiempo de build** y las sirve desde el
-propio dominio (bien para el RGPD: no se envía la IP del visitante a Google). Si la
-red interpone TLS, esa descarga falla con `UNABLE_TO_VERIFY_LEAF_SIGNATURE` y Next cae
-a fuentes del sistema — la app funciona, pero se ve con la tipografía equivocada.
-Ocurre en local, no en CI ni en despliegue. Si pasa: `node --use-system-ca`.
+propio dominio. Es lo que queremos: ni petición externa en runtime, ni la IP del
+visitante viajando a Google — relevante estando en la UE.
+
+Esa descarga la rompe cualquier cosa que interponga TLS. Nos pasó con un antivirus
+con inspección de HTTPS activa: Next falla con `UNABLE_TO_VERIFY_LEAF_SIGNATURE` y
+cae a fuentes del sistema. La app funciona, pero Raleway y JetBrains Mono no
+aparecen — y con ellas se va medio sistema de diseño.
+
+Síntoma delator: cada compilación tarda ~15 s en vez de ~2 s, por los tres reintentos
+por familia.
+
+Opciones, de menos a más invasiva: desactivar la inspección HTTPS del antivirus,
+arrancar con `node --use-system-ca`, o instalar el CA raíz corporativo y apuntar
+`NODE_EXTRA_CA_CERTS` a él. **Tras arreglarlo hay que borrar `apps/web/.next`**: el
+resultado queda cacheado y sin limpiarlo se siguen viendo las fuentes de respaldo.
+
+No afecta a CI ni al despliegue.
 
 El proyecto Supabase es `yyigaxclclxanlovxarh` (región `eu-central-1`, Postgres 17).
 **Las migraciones ya están aplicadas ahí.** El esquema del repo y el remoto coinciden.
