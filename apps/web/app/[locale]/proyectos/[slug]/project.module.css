@@ -237,10 +237,16 @@
 
 /* El número no es andamiaje decorativo: la bitácora ES una secuencia y el
    orden es información que el lector necesita. */
+/* Arriba, no centrado: el numero encabeza la fila y su borde superior queda a
+   la altura del de la miniatura. `line-height: 1` es lo que hace que la
+   alineacion sea real — con el interlineado por defecto, la caja de linea
+   anade un colchon invisible encima y el numero cae un par de pixeles. */
 .stepNumber {
+  align-self: start;
   font-family: var(--font-display);
   font-weight: 800;
   font-size: var(--text-lg);
+  line-height: 1;
   color: var(--primary);
   font-variant-numeric: tabular-nums;
 }

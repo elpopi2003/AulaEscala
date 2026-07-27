@@ -23,6 +23,15 @@ Este fichero es el **estado vivo**: qué hay construido, qué se decidió y qué
 | Scaffolding Next.js (§12.4) | **Hecho** — App Router con `/[locale]`, clientes Supabase, tokens Blueprint/Industrial, tema claro/oscuro |
 | Pantallas núcleo (§12.5) | **Las 3 que definen el producto**: feed → proyecto → paso con muro. Faltan técnica, búsqueda, precios, panel del creador y perfil |
 
+### No lances `pnpm build` con el servidor de desarrollo levantado
+
+`next dev` y `next build` comparten `apps/web/.next`. La build de producción pisa
+los *chunks* del servidor de desarrollo y este empieza a devolver
+`Cannot find module './vendor-chunks/...'` en cada petición. Parece corrupción del
+proyecto y solo es eso.
+
+Se arregla parando el servidor, borrando `apps/web/.next` y volviendo a arrancar.
+
 ### Si la tipografía se ve mal en local
 
 `next/font/google` **descarga las fuentes en tiempo de build** y las sirve desde el

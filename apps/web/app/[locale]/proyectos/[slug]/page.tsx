@@ -123,7 +123,7 @@ export default async function ProjectPage({
         <div className={`page ${styles.coverInner}`}>
           <Link href={`/${locale}`} className={styles.back}>
             <IconArrowLeft size={15} />
-            Feed
+            Proyectos
           </Link>
 
           <div className={styles.status}>
@@ -165,7 +165,7 @@ export default async function ProjectPage({
             {!steps || steps.length === 0 ? (
               <p className={styles.intro}>
                 Esta bitácora aún no tiene pasos publicados. Cuando su autor documente el
-                primero, aparecerá aquí y en el feed.
+                primero, aparecerá aquí y en Proyectos.
               </p>
             ) : (
               <ol className={styles.steps}>

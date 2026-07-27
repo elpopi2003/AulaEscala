@@ -80,7 +80,7 @@ export default async function FeedPage({
           <h1 className={styles.title}>Progreso reciente</h1>
         </div>
 
-        <nav className={styles.filters} aria-label="Filtrar el feed">
+        <nav className={styles.filters} aria-label="Filtrar los proyectos">
           {FILTERS.map((f) => (
             <Link
               key={f.key}

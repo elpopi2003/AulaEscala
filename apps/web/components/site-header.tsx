@@ -9,7 +9,9 @@ import styles from './site-header.module.css'
 type NavItem = { href: string; label: string }
 
 const NAV: NavItem[] = [
-  { href: '/es', label: 'Feed' },
+  // "Proyectos", no "Feed": el anglicismo no dice nada al publico espanol, y la
+  // pagina lo que muestra son bitacoras avanzando.
+  { href: '/es', label: 'Proyectos' },
   { href: '/es/tecnicas', label: 'Técnicas' },
   { href: '/es/precios', label: 'Precios' },
 ]
