@@ -17,7 +17,8 @@ Este fichero es el **estado vivo**: qué hay construido, qué se decidió y qué
 | Políticas RLS por tramo (§5) | **Hecho** — co-locadas con cada tabla |
 | Test de no-fuga (§13) | **Hecho** — `/supabase/tests`, bloquea el merge en CI |
 | Storage: buckets y políticas | **Hecho** |
-| Stripe: webhook, Checkout y Portal (§12.3) | **Desplegadas y verificadas** (v2). Falta dar de alta el endpoint en el panel de Stripe — ver [docs/stripe.md](docs/stripe.md) |
+| Stripe: webhook, Checkout y Portal (§12.3) | **Hecho y probado de punta a punta** — pago en modo test → tramo → muro abierto. Ver [docs/stripe.md](docs/stripe.md) |
+| Auth (Supabase) | **Hecho** — login y alta automática de perfil verificados en producción |
 | Taxonomías sembradas en remoto | **Hecho** — 11 escalas, 8 temáticas, 20 técnicas |
 | Scaffolding Next.js (§12.4) | Pendiente |
 | Pantallas núcleo (§12.5) | Pendiente |

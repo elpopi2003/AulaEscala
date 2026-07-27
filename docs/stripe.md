@@ -152,13 +152,40 @@ stripe listen --forward-to http://127.0.0.1:54321/functions/v1/stripe-webhook
 stripe trigger customer.subscription.created
 ```
 
+## Prueba de punta a punta — superada (2026-07-27)
+
+Pago real en modo test, desde la sesión de Checkout hasta el muro abriéndose:
+
+| Comprobación | Resultado |
+|---|---|
+| Checkout con JWT → sesión `cs_test_` | ✅ |
+| Crear la sesión **no** concede tramo | ✅ 0 filas en `subscriptions` antes del pago |
+| Stripe entrega los eventos | ✅ 4: `checkout.session.completed`, `customer.subscription.created`, `customer.subscription.updated`, `invoice.paid` |
+| Todas las entregas devuelven 200 | ✅ |
+| Cuatro eventos → **una** fila | ✅ el upsert de `apply_stripe_subscription` aguanta entregas casi simultáneas |
+| Fila correcta | ✅ `tier=pro`, `status=active`, `current_period_end` a un mes |
+| `user_tier()` | ✅ pasa de `subscriber` a `pro` |
+| **El muro se abre** | ✅ de 2 cuerpos a 4, materiales de 0 a 1, búsqueda en contenido de pago funcionando |
+| No escala de más | ✅ `is_at_least('modelista')` sigue en `false` |
+| Reentrega de un evento ya visto | ✅ rechazada por el PK |
+| Customer Portal | ✅ devuelve sesión de `billing.stripe.com` |
+
+Las cuatro entregas llegaron en el mismo segundo, así que de paso quedó probada la
+concurrencia: cuatro upserts casi simultáneos sobre el mismo `user_id` dejaron una
+única fila.
+
+### Cuenta de desarrollo
+
+`prueba-pago@example.com` se conserva **a propósito**: es una cuenta Pro real contra la
+que desarrollar el frontend sin volver a pagar. Borrarla dejaría además una suscripción
+viva en Stripe apuntando a un usuario inexistente, y cada renovación haría fallar el
+webhook en bucle.
+
+> ⚠️ Tiene contraseña conocida. **Borrarla —y cancelar su suscripción en Stripe— antes
+> del lanzamiento**, junto con el paso a claves `sk_live_`.
+
 ## Pendiente
 
-- [ ] **Dar de alta el endpoint del webhook en el panel de Stripe** con los seis
-      eventos de arriba. Mientras `stripe_events` siga a 0 filas, Stripe no está
-      llamando: es el indicador de que falta este paso.
-- [ ] **Prueba de punta a punta**: un pago real en modo test que acabe con la fila
-      correcta en `subscriptions`.
 - [ ] **Confirmar precios** con producto (el diseño usa 6 € y 12 €).
 - [ ] **IVA UE/OSS** — `automatic_tax` está activado en Checkout y la dirección de
       facturación es obligatoria, pero hay que **activar Stripe Tax en el panel** y
